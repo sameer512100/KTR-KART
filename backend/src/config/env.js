@@ -13,11 +13,16 @@ if (!MONGODB_URI) {
   process.exit(1);
 }
 
+let ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:5173";
+if (ALLOWED_ORIGIN.endsWith("/")) {
+  ALLOWED_ORIGIN = ALLOWED_ORIGIN.slice(0, -1);
+}
+
 const env = {
   PORT: Number(process.env.PORT || 5000),
   MONGODB_URI,
   JWT_SECRET,
-  ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN || "http://localhost:5173",
+  ALLOWED_ORIGIN,
   UPLOADS_DIR: path.join(process.cwd(), "uploads")
 };
 
