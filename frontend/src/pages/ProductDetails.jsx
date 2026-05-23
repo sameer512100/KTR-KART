@@ -117,11 +117,7 @@ export default function ProductDetails() {
         Back to Marketplace
       </Link>
 
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "1.1fr 0.9fr",
-        gap: "2.5rem"
-      }}>
+      <div className="details-layout">
         
         {/* Left column: Dynamic Image card */}
         <div className="glass-panel" style={{ padding: "1.5rem", borderRadius: "var(--radius-lg)" }}>

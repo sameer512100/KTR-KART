@@ -16,7 +16,7 @@ export const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="glass-panel" style={{
+    <nav className="glass-panel navbar-container" style={{
       position: "sticky",
       top: "1rem",
       zIndex: 100,
@@ -24,9 +24,6 @@ export const Navbar = () => {
       maxWidth: "1200px",
       width: "calc(100% - 2rem)",
       padding: "1rem 2rem",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "space-between",
       borderRadius: "var(--radius-md)",
       border: "1px solid var(--border-glass)"
     }}>
@@ -61,7 +58,7 @@ export const Navbar = () => {
       </Link>
 
       {/* Nav Links */}
-      <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+      <div className="nav-links">
         <Link to="/" style={{
           textDecoration: "none",
           color: isActive("/") ? "var(--accent)" : "var(--text-secondary)",
@@ -144,7 +141,7 @@ export const Navbar = () => {
               margin: "0 0.5rem"
             }} />
 
-            <Link to="/profile" style={{
+            <Link to="/profile" className="nav-profile-bubble" style={{
               textDecoration: "none",
               display: "flex",
               alignItems: "center",

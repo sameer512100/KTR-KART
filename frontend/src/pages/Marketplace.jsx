@@ -141,29 +141,21 @@ export default function Marketplace() {
       </div>
 
       {/* Grid Filter Layout */}
-      <div style={{
-        display: "grid",
-        gridTemplateColumns: "250px 1fr",
-        gap: "2rem",
-        alignItems: "start"
-      }}>
+      <div className="marketplace-layout">
         
         {/* Left Side: Hostel Filters */}
-        <aside className="glass-panel" style={{
+        <aside className="glass-panel hostel-sidebar-wrapper" style={{
           padding: "1.5rem",
-          position: "sticky",
-          top: "6.5rem",
           borderRadius: "var(--radius-md)",
-          display: "flex",
-          flexDirection: "column",
-          gap: "1.25rem"
+          position: "sticky",
+          top: "6.5rem"
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
             <MapPin size={18} style={{ color: "var(--accent)" }} />
-            <h3 style={{ fontSize: "1.1rem" }}>Hostel Location</h3>
+            <h3 style={{ fontSize: "1.1rem" }} className="inbox-sidebar-mobile-hide">Hostel Location</h3>
           </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <div className="hostel-sidebar">
             <button
               onClick={() => setSelectedHostel("")}
               className="btn-secondary"

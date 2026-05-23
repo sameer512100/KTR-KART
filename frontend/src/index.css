@@ -308,3 +308,180 @@ h1, h2, h3, h4, h5, h6 {
   background: rgba(26, 128, 230, 0.95) !important;
   color: #ffffff !important;
 }
+
+/* ==========================================
+   📱 MOBILE & TABLET RESPONSIVE SYSTEM 
+   ========================================== */
+
+/* Navbar responsive helpers */
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition-smooth);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  transition: var(--transition-smooth);
+}
+
+/* Marketplace grid splits */
+.marketplace-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 2rem;
+  align-items: start;
+  width: 100%;
+}
+
+.hostel-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Product Details splits */
+.details-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 2.5rem;
+}
+
+/* Form horizontal splits */
+.form-split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.upload-split {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2.5rem;
+}
+
+/* Inbox layouts */
+.inbox-container {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: calc(100vh - 140px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-premium);
+}
+
+/* 💻 Tablets (max-width: 992px) */
+@media (max-width: 992px) {
+  .marketplace-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  .hostel-sidebar-wrapper {
+    position: sticky;
+    top: 5.5rem;
+    z-index: 10;
+  }
+  
+  .hostel-sidebar {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding: 0.5rem 0.25rem !important;
+    white-space: nowrap !important;
+    background: var(--bg-app) !important;
+    border-radius: var(--radius-sm) !important;
+    border: 1px solid var(--border-glass) !important;
+    scrollbar-width: none !important; /* Hide scrollbar in Firefox */
+  }
+  
+  .hostel-sidebar::-webkit-scrollbar {
+    display: none !important; /* Hide scrollbar in Chrome/Safari */
+  }
+  
+  .hostel-sidebar button {
+    display: inline-flex !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .details-layout {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  .inbox-container {
+    grid-template-columns: 280px 1fr !important;
+  }
+}
+
+/* 📱 Mobile Phones (max-width: 768px) */
+@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+  
+  .navbar-container {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    padding: 1rem !important;
+    text-align: center !important;
+  }
+  
+  .nav-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    width: 100% !important;
+    gap: 0.5rem !important;
+  }
+  
+  .nav-links a, .nav-links button {
+    font-size: 0.85rem !important;
+    padding: 0.4rem 0.6rem !important;
+  }
+
+  .nav-profile-bubble {
+    padding: 0.25rem 0.6rem !important;
+  }
+  
+  .upload-split {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  
+  .form-split-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .glass-panel {
+    padding: 1.5rem !important;
+  }
+  
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+    gap: 1.25rem !important;
+  }
+  
+  /* Inbox responsive mobile switcher */
+  .inbox-container {
+    grid-template-columns: 1fr !important;
+    height: calc(100vh - 180px) !important;
+  }
+  
+  .inbox-sidebar-mobile-hide {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .btn-primary, .btn-secondary, .btn-accent {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
