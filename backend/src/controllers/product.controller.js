@@ -21,6 +21,10 @@ const createProduct = async (req, res) => {
 
     const product = await Product.create({
       seller: req.user._id,
+      sellerName: req.user.name,
+      sellerEmail: req.user.email,
+      sellerHostel: req.user.hostel,
+      sellerRoomNumber: req.user.roomNumber,
       title,
       description,
       category,
@@ -30,7 +34,12 @@ const createProduct = async (req, res) => {
       hostel: normalizedHostel
     });
 
-    return res.status(201).json({ message: "Product created", product });
+    const populatedProduct = await Product.findById(product._id).populate(
+      "seller",
+      "name email hostel roomNumber"
+    );
+
+    return res.status(201).json({ message: "Product created", product: populatedProduct || product });
   } catch (_error) {
     return res.status(500).json({ error: "Failed to create product" });
   }
@@ -98,7 +107,11 @@ const updateProduct = async (req, res) => {
     }
 
     await product.save();
-    return res.json({ message: "Listing updated successfully", product });
+    const populatedProduct = await Product.findById(product._id).populate(
+      "seller",
+      "name email hostel roomNumber"
+    );
+    return res.json({ message: "Listing updated successfully", product: populatedProduct || product });
   } catch (_error) {
     return res.status(500).json({ error: "Failed to update product listing" });
   }
@@ -125,7 +138,9 @@ const deleteProduct = async (req, res) => {
 
 const getMyProducts = async (req, res) => {
   try {
-    const products = await Product.find({ seller: req.user._id }).sort({ createdAt: -1 });
+    const products = await Product.find({ seller: req.user._id })
+      .sort({ createdAt: -1 })
+      .populate("seller", "name email hostel roomNumber");
     return res.json({ products });
   } catch (_error) {
     return res.status(500).json({ error: "Failed to fetch your listings" });

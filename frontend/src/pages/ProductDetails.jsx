@@ -13,7 +13,17 @@ export default function ProductDetails() {
   const [error, setError] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
 
-  const sellerId = product?.seller?._id || product?.seller || "";
+  const normalizeId = (value) => {
+    if (!value) return "";
+    if (typeof value === "string") return value;
+    if (typeof value === "object") return value._id ? String(value._id) : "";
+    return String(value);
+  };
+
+  const sellerId = normalizeId(product?.sellerId) || normalizeId(product?.seller?._id) || normalizeId(product?.seller);
+  const sellerName = product?.seller?.name || product?.sellerName || "Student";
+  const sellerHostel = product?.seller?.hostel || product?.sellerHostel || product?.hostel || "";
+  const sellerRoomNumber = product?.seller?.roomNumber || product?.sellerRoomNumber || "N/A";
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -45,7 +55,7 @@ export default function ProductDetails() {
       return;
     }
 
-    if (user.id === sellerId) {
+    if (normalizeId(user?.id || user?._id) === sellerId) {
       alert("You cannot start a chat thread on your own product listing!");
       return;
     }
@@ -216,19 +226,19 @@ export default function ProductDetails() {
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "1.5rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
                 <span style={{ color: "var(--text-secondary)", minWidth: "80px", fontSize: "0.9rem" }}>Name:</span>
-                <span style={{ fontWeight: 600 }}>{product.seller?.name || "Student"}</span>
+                <span style={{ fontWeight: 600 }}>{sellerName}</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
                 <span style={{ color: "var(--text-secondary)", minWidth: "80px", fontSize: "0.9rem" }}>Hostel:</span>
-                <span style={{ textTransform: "capitalize", fontWeight: 500 }}>{product.seller?.hostel || product.hostel} Hostel</span>
+                <span style={{ textTransform: "capitalize", fontWeight: 500 }}>{sellerHostel} Hostel</span>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
                 <span style={{ color: "var(--text-secondary)", minWidth: "80px", fontSize: "0.9rem" }}>Room No:</span>
-                <span style={{ fontWeight: 600, color: "var(--accent)" }}>{product.seller?.roomNumber || "N/A"}</span>
+                <span style={{ fontWeight: 600, color: "var(--accent)" }}>{sellerRoomNumber}</span>
               </div>
             </div>
 
-            {user?.id === sellerId ? (
+            {normalizeId(user?.id || user?._id) === sellerId ? (
               <div style={{
                 background: "rgba(255, 179, 0, 0.05)",
                 border: "1px solid rgba(255, 179, 0, 0.15)",

@@ -381,7 +381,7 @@ export default function Marketplace() {
                     background: "rgba(255, 255, 255, 0.01)"
                   }}>
                     <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                      Seller: {product.seller?.name || "Student"}
+                      Seller: {product.seller?.name || product.sellerName || "Student"}
                     </span>
                     <Link to={`/product/${product._id}`} className="btn-secondary view-details-btn" style={{
                       padding: "0.35rem 0.75rem",
