@@ -2,6 +2,7 @@ const path = require("path");
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const MONGODB_URI = process.env.MONGODB_URI;
+const RAW_ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
 
 if (!JWT_SECRET || JWT_SECRET === "change_this_secret_in_env") {
   console.error("CRITICAL ERROR: JWT_SECRET environment variable is missing or insecure! Server startup aborted.");
@@ -13,7 +14,12 @@ if (!MONGODB_URI) {
   process.exit(1);
 }
 
-let ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || "http://localhost:5173";
+if (!RAW_ALLOWED_ORIGIN) {
+  console.error("CRITICAL ERROR: ALLOWED_ORIGIN environment variable is missing! Server startup aborted.");
+  process.exit(1);
+}
+
+let ALLOWED_ORIGIN = RAW_ALLOWED_ORIGIN;
 if (ALLOWED_ORIGIN.endsWith("/")) {
   ALLOWED_ORIGIN = ALLOWED_ORIGIN.slice(0, -1);
 }

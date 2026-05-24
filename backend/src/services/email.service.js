@@ -12,6 +12,8 @@ class EmailDeliveryError extends Error {
 }
 
 const sendWithResend = async (email, otp) => {
+  const resendFrom = process.env.RESEND_FROM || "KTR-KART <noreply@ktrkartsrm.online>";
+
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -19,7 +21,7 @@ const sendWithResend = async (email, otp) => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      from: process.env.RESEND_FROM || process.env.SMTP_FROM || "KTR-KART <onboarding@resend.dev>",
+      from: resendFrom,
       to: [email],
       subject: "KTR-KART Email Verification OTP",
       text: `Your OTP is ${otp}. It expires in 10 minutes.`,

@@ -23,7 +23,7 @@ const start = async () => {
     registerChatSocket(io);
 
     server.listen(env.PORT, () => {
-      console.log(`Server listening on http://localhost:${env.PORT}`);
+      console.log(`Server listening on port ${env.PORT}`);
     });
   } catch (error) {
     console.error("Failed to start server", error);

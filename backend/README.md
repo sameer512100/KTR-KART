@@ -72,7 +72,7 @@ All chat REST endpoints need `Authorization: Bearer <token>`.
 ## Socket.IO
 Connect with auth token:
 ```js
-const socket = io("http://localhost:5000", {
+const socket = io(process.env.VITE_API_BASE, {
   auth: { token }
 });
 ```

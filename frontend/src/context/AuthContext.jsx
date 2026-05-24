@@ -3,7 +3,10 @@ import { io } from "socket.io-client";
 
 const AuthContext = createContext(null);
 
-const configuredApiBase = import.meta.env.VITE_API_BASE || "http://localhost:5000";
+const configuredApiBase = import.meta.env.VITE_API_BASE;
+if (!configuredApiBase) {
+  throw new Error("VITE_API_BASE is required. Set it to your backend URL.");
+}
 export const API_BASE = configuredApiBase.replace(/\/+$/, "");
 
 export const AuthProvider = ({ children }) => {
