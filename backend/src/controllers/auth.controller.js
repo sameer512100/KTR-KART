@@ -119,6 +119,13 @@ const signin = async (req, res) => {
 
     const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
+      const pendingUser = await PendingUser.findOne({ email: normalizedEmail });
+      if (pendingUser) {
+        return res.status(403).json({
+          error: "Signup is not verified yet. Please complete OTP verification first."
+        });
+      }
+
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
