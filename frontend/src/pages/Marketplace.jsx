@@ -105,7 +105,7 @@ export default function Marketplace() {
           SRM campus peer-trading, <span className="text-gradient-primary">simplified.</span>
         </h1>
         <p className="marketplace-subtitle" style={{ color: "var(--text-secondary)", fontSize: "1.1rem", maxWidth: "600px" }}>
-          Buy, sell, and rent essentials directly inside your hostels. No shipping, no fees — just verify your email, list items, meet up, and trade!
+          Buy, sell, and rent essentials directly inside your hostels. No shipping, no fees - just verify your email, list items, meet up, and trade!
         </p>
 
         {/* Search Input bar */}
@@ -299,7 +299,7 @@ export default function Marketplace() {
                 }}>
                   
                   {/* Image wrapper */}
-                  <div style={{
+                  <div className="product-media" style={{
                     position: "relative",
                     width: "100%",
                     paddingTop: "75%", /* 4:3 Aspect Ratio */

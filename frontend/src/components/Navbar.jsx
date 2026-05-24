@@ -16,7 +16,7 @@ export const Navbar = () => {
 
   return (
     <nav className="glass-panel navbar-container site-navbar" style={{
-      position: "sticky",
+      position: "fixed",
       top: "1rem",
       zIndex: 100,
       margin: "1rem auto",

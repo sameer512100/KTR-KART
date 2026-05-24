@@ -498,7 +498,7 @@ h1, h2, h3, h4, h5, h6 {
 .app-main {
   flex-grow: 1;
   width: 100%;
-  padding: clamp(0.75rem, 2vw, 1.25rem);
+  padding: calc(6rem + clamp(0.75rem, 2vw, 1.25rem)) clamp(0.75rem, 2vw, 1.25rem) clamp(0.75rem, 2vw, 1.25rem);
 }
 
 .page-container {
@@ -511,6 +511,16 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 1200px;
   width: calc(100% - 2rem);
   margin: 4rem auto 2rem auto !important;
+}
+
+.site-navbar {
+  position: fixed !important;
+  inset: 1rem auto auto 50% !important;
+  transform: translateX(-50%);
+  z-index: 1000 !important;
+  max-width: 1200px !important;
+  width: min(1200px, calc(100% - 2rem)) !important;
+  margin: 0 !important;
 }
 
 .brand-wordmark {
@@ -553,6 +563,27 @@ h1, h2, h3, h4, h5, h6 {
 
 .view-details-btn {
   white-space: nowrap;
+}
+
+.marketplace-page {
+  max-width: 1200px;
+  overflow-x: clip;
+}
+
+.marketplace-layout > main,
+.marketplace-toolbar,
+.product-grid > article {
+  min-width: 0;
+}
+
+.product-media {
+  aspect-ratio: 4 / 3;
+  padding-top: 0 !important;
+  min-height: 0;
+}
+
+.product-media img {
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .inbox-container {
@@ -603,11 +634,13 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 768px) {
   .app-main {
-    padding: 0.5rem;
+    padding: 8.75rem 0.5rem 0.5rem;
   }
 
   .page-container {
-    padding-inline: 0.25rem !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding-inline: 0 !important;
   }
 
   .navbar-container {
@@ -616,6 +649,13 @@ h1, h2, h3, h4, h5, h6 {
     top: 0.5rem !important;
     width: calc(100% - 1rem) !important;
     margin: 0.5rem auto 1rem auto !important;
+  }
+
+  .site-navbar {
+    inset: 0.5rem auto auto 50% !important;
+    width: calc(100% - 1rem) !important;
+    max-width: none !important;
+    padding: 0.75rem !important;
   }
 
   .navbar-container > a:first-child {
@@ -640,26 +680,93 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .marketplace-hero {
-    padding: 2rem 1rem !important;
-    margin-bottom: 1.25rem !important;
+    padding: 1rem !important;
+    margin-bottom: 0.9rem !important;
     text-align: left !important;
     align-items: stretch !important;
+    border-radius: var(--radius-md) !important;
   }
 
   .marketplace-title {
-    font-size: 2rem !important;
+    font-size: 1.45rem !important;
+    line-height: 1.12 !important;
   }
 
   .marketplace-subtitle {
-    font-size: 0.95rem !important;
+    font-size: 0.86rem !important;
+    line-height: 1.45 !important;
+    max-width: none !important;
   }
 
   .marketplace-toolbar {
     align-items: stretch !important;
+    gap: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
   }
 
   .category-tabs {
     width: 100%;
+    max-width: 100%;
+    overflow-x: auto !important;
+    padding-inline: 0 !important;
+  }
+
+  .category-tabs button {
+    flex: 0 0 auto;
+  }
+
+  .hostel-sidebar-wrapper {
+    padding: 0.75rem !important;
+    top: 8.35rem !important;
+    border-radius: var(--radius-md) !important;
+    overflow: hidden;
+  }
+
+  .hostel-sidebar-wrapper h3 {
+    display: none;
+  }
+
+  .hostel-sidebar {
+    max-width: 100%;
+    gap: 0.5rem !important;
+    padding: 0.4rem !important;
+  }
+
+  .hostel-sidebar button {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.82rem !important;
+  }
+
+  .product-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.9rem !important;
+  }
+
+  .product-grid .glass-card {
+    border-radius: var(--radius-md) !important;
+  }
+
+  .product-media {
+    height: clamp(190px, 62vw, 285px) !important;
+    aspect-ratio: auto;
+  }
+
+  .product-media img {
+    object-fit: contain !important;
+  }
+
+  .product-grid article > div:nth-child(2) {
+    padding: 1rem !important;
+  }
+
+  .product-grid article > div:last-child {
+    padding: 0.8rem 1rem !important;
+    gap: 0.75rem !important;
+  }
+
+  .view-details-btn {
+    width: auto !important;
+    flex: 0 0 auto;
   }
 
   .auth-card,
@@ -729,7 +836,24 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .marketplace-title {
-    font-size: 1.75rem !important;
+    font-size: 1.25rem !important;
+  }
+
+  .marketplace-subtitle {
+    display: none;
+  }
+
+  .marketplace-hero > div {
+    margin-top: 0.25rem !important;
+  }
+
+  .marketplace-hero input {
+    font-size: 0.92rem !important;
+    padding-block: 0.85rem !important;
+  }
+
+  .product-media {
+    height: clamp(180px, 72vw, 245px) !important;
   }
 
   .manage-product-card {
