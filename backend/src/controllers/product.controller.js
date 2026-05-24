@@ -7,7 +7,7 @@ const createProduct = async (req, res) => {
     const { title, description, category, price, hostel, image, quantity } = req.body;
     const normalizedHostel = normalizeHostel(hostel || req.user.hostel);
 
-    if (!title || !category || !price) {
+    if (!title || !category || price === undefined || price === null || price === "") {
       return res.status(400).json({ error: "title, category, and price are required" });
     }
 

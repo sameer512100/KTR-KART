@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Navbar } from "./components/Navbar";
@@ -45,19 +44,12 @@ const ProtectedRoute = ({ children }) => {
 function AppContent() {
   return (
     <Router>
-      <div style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh"
-      }}>
+      <div className="app-shell">
         {/* Navigation Bar */}
         <Navbar />
 
         {/* Central main workspace container */}
-        <main style={{
-          flexGrow: 1,
-          padding: "1rem"
-        }}>
+        <main className="app-main">
           <Routes>
             <Route path="/" element={<Marketplace />} />
             <Route path="/signin" element={<SignIn />} />

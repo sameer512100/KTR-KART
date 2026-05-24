@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth, API_BASE } from "../context/AuthContext";
 import { Camera, User, Mail, Home, Bed, Save, AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
@@ -17,7 +17,7 @@ const FALLBACK_HOSTELS = [
 ];
 
 export default function Profile() {
-  const { user, token, updateUserProfile } = useAuth();
+  const { user, updateUserProfile } = useAuth();
   const navigate = useNavigate();
 
   const [name, setName] = useState(user?.name || "");
@@ -113,11 +113,11 @@ export default function Profile() {
   }
 
   return (
-    <div style={{
+    <div className="page-container profile-page animate-fade-in" style={{
       maxWidth: "600px",
       margin: "2rem auto",
       padding: "0 1rem"
-    }} className="animate-fade-in">
+    }}>
       {/* Back button */}
       <button 
         onClick={() => navigate(-1)}
@@ -136,7 +136,7 @@ export default function Profile() {
         Back
       </button>
 
-      <div className="glass-panel" style={{
+      <div className="glass-panel profile-card" style={{
         padding: "2.5rem",
         borderRadius: "var(--radius-lg)",
         position: "relative",
@@ -226,7 +226,7 @@ export default function Profile() {
         </div>
 
         {error && (
-          <div style={{
+          <div className="form-split-grid" style={{
             background: "rgba(239, 68, 110, 0.1)",
             border: "1px solid rgba(239, 68, 110, 0.25)",
             color: "var(--error)",

@@ -1,8 +1,6 @@
-import React from "react";
-
 export const Footer = () => {
   return (
-    <footer style={{
+    <footer className="site-footer" style={{
       maxWidth: "1200px",
       margin: "4rem auto 2rem auto",
       padding: "2rem 1rem",

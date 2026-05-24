@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { API_BASE, useAuth } from "../context/AuthContext";
-import { MessageSquare, MapPin, Tag, ArrowLeft, User, Mail, ShieldAlert, Calendar } from "lucide-react";
+import { MessageSquare, MapPin, ArrowLeft, User, ShieldAlert, Calendar } from "lucide-react";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -98,7 +98,7 @@ export default function ProductDetails() {
   }
 
   return (
-    <div className="animate-fade-in" style={{
+    <div className="page-container product-details-page animate-fade-in" style={{
       maxWidth: "1000px",
       margin: "0 auto",
       padding: "1rem"

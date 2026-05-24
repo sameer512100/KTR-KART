@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { LogIn, Key, Mail, AlertCircle } from "lucide-react";
@@ -28,14 +28,14 @@ export default function SignIn() {
   };
 
   return (
-    <div style={{
+    <div className="auth-page animate-fade-in" style={{
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       minHeight: "70vh",
       padding: "2rem 1rem",
-    }} className="animate-fade-in">
-      <div className="glass-panel" style={{
+    }}>
+      <div className="glass-panel auth-card" style={{
         maxWidth: "450px",
         width: "100%",
         padding: "2.5rem",

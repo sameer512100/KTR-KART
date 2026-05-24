@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import { API_BASE, useAuth } from "../context/AuthContext";
-import { Send, User, MessageSquare, MapPin, ShoppingBag, ArrowLeft, Loader } from "lucide-react";
+import { Send, User, MessageSquare, MapPin } from "lucide-react";
 
 export default function Inbox() {
   const { user, token, socket } = useAuth();
@@ -19,7 +19,6 @@ export default function Inbox() {
   // Layout states
   const [usersLoading, setUsersLoading] = useState(true);
   const [messagesLoading, setMessagesLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const messagesEndRef = useRef(null);
 
@@ -55,7 +54,7 @@ export default function Inbox() {
         }
       } catch (err) {
         console.error(err);
-        setError("Could not load campus directory.");
+        console.error("Could not load campus directory.");
       } finally {
         setUsersLoading(false);
       }
@@ -164,13 +163,13 @@ export default function Inbox() {
   const contextProduct = getContextProduct();
 
   return (
-    <div className="animate-fade-in" style={{
+    <div className="page-container inbox-page animate-fade-in" style={{
       maxWidth: "1100px",
       margin: "0 auto",
       padding: "1rem",
       height: "calc(100vh - 12rem)"
     }}>
-      <div className="glass-panel" style={{
+      <div className="glass-panel inbox-container" style={{
         display: "grid",
         gridTemplateColumns: "320px 1fr",
         height: "100%",

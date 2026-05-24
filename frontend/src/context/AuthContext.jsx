@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { io } from "socket.io-client";
 
 const AuthContext = createContext(null);
@@ -10,6 +10,16 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("ktr_kart_token") || "");
   const [socket, setSocket] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const signout = useCallback(() => {
+    localStorage.removeItem("ktr_kart_token");
+    setToken("");
+    setUser(null);
+    setSocket((currentSocket) => {
+      currentSocket?.disconnect();
+      return null;
+    });
+  }, []);
 
   // Auto fetch user profile if token is present
   useEffect(() => {
@@ -42,7 +52,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     fetchMe();
-  }, [token]);
+  }, [token, signout]);
 
   // Handle Socket.IO connection when user & token are present
   useEffect(() => {
@@ -65,10 +75,10 @@ export const AuthProvider = ({ children }) => {
         newSocket.close();
       };
     } else {
-      if (socket) {
-        socket.close();
-        setSocket(null);
-      }
+      setSocket((currentSocket) => {
+        currentSocket?.close();
+        return null;
+      });
     }
   }, [user, token]);
 
@@ -112,15 +122,6 @@ export const AuthProvider = ({ children }) => {
     setToken(data.token);
     setUser(data.user);
     return data;
-  };
-
-  const signout = () => {
-    localStorage.removeItem("ktr_kart_token");
-    setToken("");
-    setUser(null);
-    if (socket) {
-      socket.disconnect();
-    }
   };
 
   const updateUserProfile = async ({ name, hostel, roomNumber, profilePhoto }) => {

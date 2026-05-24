@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ShoppingCart, LogOut, MessageSquare, PlusCircle, User, Home, Layers } from "lucide-react";
@@ -16,7 +15,7 @@ export const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="glass-panel navbar-container" style={{
+    <nav className="glass-panel navbar-container site-navbar" style={{
       position: "sticky",
       top: "1rem",
       zIndex: 100,
@@ -46,7 +45,7 @@ export const Navbar = () => {
         }}>
           <ShoppingCart size={20} />
         </div>
-        <span style={{
+        <span className="brand-wordmark" style={{
           fontFamily: "var(--font-title)",
           fontWeight: 800,
           fontSize: "1.4rem",
@@ -134,7 +133,7 @@ export const Navbar = () => {
             </Link>
 
             {/* Profile & Signout */}
-            <div style={{
+            <div className="nav-divider" style={{
               height: "24px",
               width: "1px",
               background: "var(--border-glass)",

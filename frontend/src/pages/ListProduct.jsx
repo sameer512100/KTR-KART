@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE, useAuth } from "../context/AuthContext";
 import { PlusCircle, ShoppingBag, DollarSign, List, Home, AlertCircle, FileImage } from "lucide-react";
@@ -131,7 +131,7 @@ export default function ListProduct() {
   };
 
   return (
-    <div className="animate-fade-in" style={{
+    <div className="page-container list-product-page animate-fade-in" style={{
       maxWidth: "750px",
       margin: "0 auto",
       padding: "1rem"
@@ -141,7 +141,7 @@ export default function ListProduct() {
         borderRadius: "var(--radius-lg)"
       }}>
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem" }}>
-          <div style={{
+          <div className="upload-split" style={{
             background: "rgba(26, 128, 230, 0.15)",
             color: "var(--primary)",
             padding: "0.5rem",
@@ -276,7 +276,7 @@ export default function ListProduct() {
                 </div>
               </div>
 
-              <div style={{
+              <div className="form-split-grid" style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
                 gap: "1rem"

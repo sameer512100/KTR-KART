@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE, useAuth } from "../context/AuthContext";
-import { Trash2, Edit3, Save, X, ShoppingBag, MapPin, Plus, AlertCircle, CheckCircle, ArrowLeft, Layers } from "lucide-react";
+import { Trash2, Edit3, Save, X, ShoppingBag, MapPin, Plus, AlertCircle, CheckCircle, ArrowLeft } from "lucide-react";
 
 const CATEGORIES = ["Books", "Electronics", "Hostel Essentials", "Cycles", "Others"];
 
@@ -37,7 +37,7 @@ export default function ManageProducts() {
   const [editHostel, setEditHostel] = useState("");
   const [editLoading, setEditLoading] = useState(false);
 
-  const fetchMyProducts = async () => {
+  const fetchMyProducts = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -55,13 +55,13 @@ export default function ManageProducts() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     if (token) {
       fetchMyProducts();
     }
-  }, [token]);
+  }, [token, fetchMyProducts]);
 
   const handleDelete = async (productId) => {
     if (!window.confirm("Are you sure you want to permanently delete this product listing from KTR-KART?")) {
@@ -148,9 +148,9 @@ export default function ManageProducts() {
   }
 
   return (
-    <div className="animate-fade-in" style={{ maxWidth: "1000px", margin: "2rem auto", padding: "0 1rem" }}>
+    <div className="page-container manage-page animate-fade-in" style={{ maxWidth: "1000px", margin: "2rem auto", padding: "0 1rem" }}>
       {/* Top Navigation */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+      <div className="page-actions" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <button 
           onClick={() => navigate(-1)}
           className="btn-secondary"
@@ -264,7 +264,7 @@ export default function ManageProducts() {
           /* Products List */
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {products.map((product) => (
-              <div key={product._id} className="glass-card" style={{
+              <div key={product._id} className="glass-card manage-product-card" style={{
                 padding: "1.25rem",
                 borderRadius: "var(--radius-md)",
                 display: "grid",
@@ -280,7 +280,7 @@ export default function ManageProducts() {
                 {editingProduct !== product._id && (
                   <>
                     {/* Thumbnail */}
-                    <div style={{
+                    <div className="edit-product-grid" style={{
                       width: "100px",
                       height: "100px",
                       borderRadius: "var(--radius-sm)",
@@ -375,7 +375,7 @@ export default function ManageProducts() {
                       </button>
                     </div>
 
-                    <div style={{
+                    <div className="edit-meta-grid" style={{
                       display: "grid",
                       gridTemplateColumns: "1.5fr 1fr 1fr",
                       gap: "1rem"

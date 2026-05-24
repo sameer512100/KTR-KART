@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { API_BASE, useAuth } from "../context/AuthContext";
-import { Search, MapPin, Tag, Plus, ShoppingBag, Eye, Calendar } from "lucide-react";
+import { Search, MapPin, Plus, ShoppingBag, Eye, Calendar } from "lucide-react";
 
 const CATEGORIES = ["All", "Books", "Electronics", "Hostel Essentials", "Cycles", "Others"];
 
@@ -28,7 +28,7 @@ export default function Marketplace() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -46,11 +46,11 @@ export default function Marketplace() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedHostel]);
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedHostel]);
+  }, [fetchProducts]);
 
   // Filter listings locally by Category and Search Keyword
   const filteredProducts = products.filter((p) => {
@@ -80,16 +80,16 @@ export default function Marketplace() {
       interval = Math.floor(seconds / 60);
       if (interval >= 1) return `${interval}m ago`;
       return "just now";
-    } catch (err) {
+    } catch {
       return "recently";
     }
   };
 
   return (
-    <div className="animate-fade-in" style={{ maxWidth: "1200px", margin: "0 auto", padding: "1rem" }}>
+    <div className="page-container marketplace-page animate-fade-in">
       
       {/* Premium Hero Section */}
-      <div className="glass-panel" style={{
+      <div className="glass-panel marketplace-hero" style={{
         padding: "3rem 2rem",
         textAlign: "center",
         borderRadius: "var(--radius-lg)",
@@ -101,10 +101,10 @@ export default function Marketplace() {
         alignItems: "center",
         gap: "1rem"
       }}>
-        <h1 style={{ fontSize: "2.5rem", fontWeight: 800, letterSpacing: "-1px" }}>
+        <h1 className="marketplace-title" style={{ fontSize: "2.5rem", fontWeight: 800, letterSpacing: "-1px" }}>
           SRM campus peer-trading, <span className="text-gradient-primary">simplified.</span>
         </h1>
-        <p style={{ color: "var(--text-secondary)", fontSize: "1.1rem", maxWidth: "600px" }}>
+        <p className="marketplace-subtitle" style={{ color: "var(--text-secondary)", fontSize: "1.1rem", maxWidth: "600px" }}>
           Buy, sell, and rent essentials directly inside your hostels. No shipping, no fees — just verify your email, list items, meet up, and trade!
         </p>
 
@@ -199,7 +199,7 @@ export default function Marketplace() {
         <main style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           
           {/* Category Tabs & CTA */}
-          <div style={{
+          <div className="marketplace-toolbar" style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -209,7 +209,7 @@ export default function Marketplace() {
             borderBottom: "1px solid var(--border-glass)"
           }}>
             {/* Category Tabs */}
-            <div style={{ display: "flex", gap: "0.5rem", overflowX: "auto", paddingBottom: "2px" }}>
+            <div className="category-tabs" style={{ display: "flex", gap: "0.5rem", overflowX: "auto", paddingBottom: "2px" }}>
               {CATEGORIES.map((cat) => (
                 <button
                   key={cat}
@@ -398,7 +398,7 @@ export default function Marketplace() {
                     <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
                       Seller: {product.seller?.name || "Student"}
                     </span>
-                    <Link to={`/product/${product._id}`} className="btn-secondary" style={{
+                    <Link to={`/product/${product._id}`} className="btn-secondary view-details-btn" style={{
                       padding: "0.35rem 0.75rem",
                       fontSize: "0.8rem",
                       gap: "0.3rem",

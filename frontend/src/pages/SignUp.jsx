@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth, API_BASE } from "../context/AuthContext";
 import { UserPlus, User, Mail, Key, Home, Bed, AlertCircle } from "lucide-react";
@@ -68,21 +68,21 @@ export default function SignUp() {
   };
 
   return (
-    <div style={{
+    <div className="auth-page animate-fade-in" style={{
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
       minHeight: "80vh",
       padding: "2rem 1rem",
-    }} className="animate-fade-in">
-      <div className="glass-panel" style={{
+    }}>
+      <div className="glass-panel auth-card" style={{
         maxWidth: "500px",
         width: "100%",
         padding: "2.5rem",
         borderRadius: "var(--radius-lg)"
       }}>
         <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <div style={{
+          <div className="form-split-grid" style={{
             background: "rgba(255, 179, 0, 0.15)",
             color: "var(--accent)",
             width: "56px",
