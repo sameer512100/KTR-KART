@@ -3,7 +3,7 @@ const User = require("../models/User");
 const PendingUser = require("../models/PendingUser");
 const { ALLOWED_HOSTELS } = require("../constants/hostels");
 const { createOtp, isSrmEmail, normalizeHostel, sha256 } = require("../utils/common");
-const { sendOtpEmail } = require("../services/email.service");
+const { sendOtpEmail, EmailDeliveryError } = require("../services/email.service");
 const { generateToken } = require("../services/auth.service");
 
 const initiateSignup = async (req, res) => {
@@ -43,13 +43,16 @@ const initiateSignup = async (req, res) => {
         otpHash: sha256(otp),
         otpExpiresAt: new Date(Date.now() + 10 * 60 * 1000)
       },
-      { upsert: true, new: true, setDefaultsOnInsert: true }
+      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true }
     );
 
     await sendOtpEmail(normalizedEmail, otp);
     return res.json({ message: "OTP sent to your SRM email" });
   } catch (error) {
     console.error(error);
+    if (error instanceof EmailDeliveryError) {
+      return res.status(502).json({ error: error.message });
+    }
     return res.status(500).json({ error: "Failed to initiate signup" });
   }
 };
@@ -176,7 +179,7 @@ const updateProfile = async (req, res) => {
         roomNumber,
         profilePhoto: profilePhoto !== undefined ? profilePhoto : req.user.profilePhoto || ""
       },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     return res.json({
