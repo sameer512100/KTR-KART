@@ -9,8 +9,7 @@ const getChatUsers = async (req, res) => {
       "name email hostel roomNumber"
     );
     return res.json({ users });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to fetch chat users" });
   }
 };
@@ -18,6 +17,10 @@ const getChatUsers = async (req, res) => {
 const getMessagesWithUser = async (req, res) => {
   try {
     const { userId } = req.params;
+
+    if (!userId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
 
     const messages = await Message.find({
       $or: [
@@ -31,8 +34,7 @@ const getMessagesWithUser = async (req, res) => {
       .populate("product", "title price imageUrl");
 
     return res.json({ messages });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to fetch messages" });
   }
 };
@@ -41,6 +43,10 @@ const sendMessage = async (req, res) => {
   try {
     const { userId } = req.params;
     const { text, productId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "userId is required" });
+    }
 
     if (!text || !String(text).trim()) {
       return res.status(400).json({ error: "Message text is required" });
@@ -65,8 +71,7 @@ const sendMessage = async (req, res) => {
     }
 
     return res.status(201).json({ message: fullMessage });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to send message" });
   }
 };

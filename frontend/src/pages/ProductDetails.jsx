@@ -13,6 +13,8 @@ export default function ProductDetails() {
   const [error, setError] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
 
+  const sellerId = product?.seller?._id || product?.seller || "";
+
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
@@ -22,8 +24,7 @@ export default function ProductDetails() {
         if (!response.ok) throw new Error("Listing not found");
         const data = await response.json();
         setProduct(data.product);
-      } catch (err) {
-        console.error(err);
+      } catch (_err) {
         setError("The product listing could not be retrieved. It may have been sold or removed.");
       } finally {
         setLoading(false);
@@ -35,12 +36,16 @@ export default function ProductDetails() {
 
   const handleStartChat = async () => {
     if (!user) {
-      // Redirect to sign in if not authenticated
       navigate("/signin");
       return;
     }
 
-    if (user.id === product.seller?._id) {
+    if (!sellerId) {
+      alert("This listing is missing seller details, so chat cannot be started.");
+      return;
+    }
+
+    if (user.id === sellerId) {
       alert("You cannot start a chat thread on your own product listing!");
       return;
     }
@@ -48,8 +53,7 @@ export default function ProductDetails() {
     setChatLoading(true);
 
     try {
-      // Send initial contextual ping to the seller
-      const response = await fetch(`${API_BASE}/api/chats/${product.seller?._id}`, {
+      const response = await fetch(`${API_BASE}/api/chats/${sellerId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,10 +67,8 @@ export default function ProductDetails() {
 
       if (!response.ok) throw new Error("Could not initiate chat connection");
 
-      // Redirect to active Inbox
-      navigate(`/chats?selectUser=${product.seller?._id}`);
-    } catch (err) {
-      console.error(err);
+      navigate(`/chats?selectUser=${sellerId}`);
+    } catch (_err) {
       alert("Unable to open chat thread at this moment. Please try again.");
     } finally {
       setChatLoading(false);
@@ -76,7 +78,7 @@ export default function ProductDetails() {
   if (loading) {
     return (
       <div style={{ textAlign: "center", padding: "8rem 2rem", color: "var(--text-secondary)" }}>
-        <p style={{ fontSize: "1.1rem" }}>Connecting with SRM database servers...</p>
+        <p style={{ fontSize: "1.1rem" }}>Loading...</p>
       </div>
     );
   }
@@ -119,7 +121,6 @@ export default function ProductDetails() {
 
       <div className="details-layout">
         
-        {/* Left column: Dynamic Image card */}
         <div className="glass-panel" style={{ padding: "1.5rem", borderRadius: "var(--radius-lg)" }}>
           <div style={{
             position: "relative",
@@ -144,12 +145,10 @@ export default function ProductDetails() {
           </div>
         </div>
 
-        {/* Right column: Info details */}
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           
           <div className="glass-panel" style={{ padding: "2rem", borderRadius: "var(--radius-lg)" }}>
             
-            {/* Title & Badge */}
             <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center", gap: "0.5rem", marginBottom: "1rem" }}>
               <span className="badge badge-blue" style={{ fontSize: "0.75rem" }}>{product.category}</span>
               <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: "0.25rem" }}>
@@ -162,7 +161,6 @@ export default function ProductDetails() {
               {product.title}
             </h1>
 
-            {/* Price Overlay */}
             <div style={{
               fontSize: "2.2rem",
               fontWeight: 800,
@@ -172,7 +170,6 @@ export default function ProductDetails() {
               ₹{product.price}
             </div>
 
-            {/* Description */}
             {product.description && (
               <div style={{
                 borderTop: "1px solid var(--border-glass)",
@@ -191,7 +188,6 @@ export default function ProductDetails() {
               </div>
             )}
 
-            {/* Hostel specific Location */}
             <div style={{
               display: "flex",
               alignItems: "center",
@@ -211,7 +207,6 @@ export default function ProductDetails() {
 
           </div>
 
-          {/* Seller Metadata card */}
           <div className="glass-panel" style={{ padding: "1.75rem", borderRadius: "var(--radius-lg)" }}>
             <h3 style={{ fontSize: "1.1rem", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <User size={18} style={{ color: "var(--primary)" }} />
@@ -233,8 +228,7 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            {/* Chat Action */}
-            {user?.id === product.seller?._id ? (
+            {user?.id === sellerId ? (
               <div style={{
                 background: "rgba(255, 179, 0, 0.05)",
                 border: "1px solid rgba(255, 179, 0, 0.15)",

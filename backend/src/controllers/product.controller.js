@@ -31,8 +31,7 @@ const createProduct = async (req, res) => {
     });
 
     return res.status(201).json({ message: "Product created", product });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to create product" });
   }
 };
@@ -51,8 +50,7 @@ const getProducts = async (req, res) => {
       .populate("seller", "name email hostel roomNumber");
 
     return res.json({ products });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to fetch products" });
   }
 };
@@ -69,8 +67,7 @@ const getProductById = async (req, res) => {
     }
 
     return res.json({ product });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to fetch product" });
   }
 };
@@ -102,8 +99,7 @@ const updateProduct = async (req, res) => {
 
     await product.save();
     return res.json({ message: "Listing updated successfully", product });
-  } catch (error) {
-    console.error("Error updating listing:", error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to update product listing" });
   }
 };
@@ -122,8 +118,7 @@ const deleteProduct = async (req, res) => {
 
     await Product.deleteOne({ _id: product._id });
     return res.json({ message: "Listing deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting listing:", error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to delete product listing" });
   }
 };
@@ -132,8 +127,7 @@ const getMyProducts = async (req, res) => {
   try {
     const products = await Product.find({ seller: req.user._id }).sort({ createdAt: -1 });
     return res.json({ products });
-  } catch (error) {
-    console.error("Error fetching my products:", error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to fetch your listings" });
   }
 };

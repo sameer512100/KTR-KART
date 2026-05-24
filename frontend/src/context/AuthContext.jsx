@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }) => {
     });
   }, []);
 
-  // Auto fetch user profile if token is present
   useEffect(() => {
     const fetchMe = async () => {
       if (!token) {
@@ -45,11 +44,9 @@ export const AuthProvider = ({ children }) => {
           const data = await response.json();
           setUser(data.user);
         } else {
-          // Token expired or invalid
           signout();
         }
-      } catch (err) {
-        console.error("Failed to fetch profile", err);
+      } catch (_err) {
       } finally {
         setLoading(false);
       }
@@ -58,20 +55,15 @@ export const AuthProvider = ({ children }) => {
     fetchMe();
   }, [token, signout]);
 
-  // Handle Socket.IO connection when user & token are present
   useEffect(() => {
     if (user && token) {
       const newSocket = io(API_BASE, {
         auth: { token },
       });
 
-      newSocket.on("connect", () => {
-        console.log("Connected to WebSocket server as user:", user.id);
-      });
+      newSocket.on("connect", () => {});
 
-      newSocket.on("disconnect", () => {
-        console.log("Disconnected from WebSocket server");
-      });
+      newSocket.on("disconnect", () => {});
 
       setSocket(newSocket);
 
@@ -106,7 +98,6 @@ export const AuthProvider = ({ children }) => {
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Failed to verify OTP");
     
-    // Auto login
     localStorage.setItem("ktr_kart_token", data.token);
     setToken(data.token);
     setUser(data.user);

@@ -8,21 +8,17 @@ export default function Inbox() {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectUserParam = searchParams.get("selectUser");
 
-  // Chat users and selected contact
   const [chatUsers, setChatUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
-  
-  // Message input state
+
   const [textInput, setTextInput] = useState("");
-  
-  // Layout states
+
   const [usersLoading, setUsersLoading] = useState(true);
   const [messagesLoading, setMessagesLoading] = useState(false);
 
   const messagesEndRef = useRef(null);
 
-  // Auto scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -31,7 +27,6 @@ export default function Inbox() {
     scrollToBottom();
   }, [messages]);
 
-  // Fetch all chat-enabled users on campus
   useEffect(() => {
     const fetchUsers = async () => {
       setUsersLoading(true);
@@ -45,16 +40,13 @@ export default function Inbox() {
         const data = await response.json();
         setChatUsers(data.users || []);
         
-        // If a specific user is requested in the search params, pre-select them!
         if (selectUserParam) {
           const matchedUser = data.users.find((u) => u._id === selectUserParam);
           if (matchedUser) {
             setSelectedUser(matchedUser);
           }
         }
-      } catch (err) {
-        console.error(err);
-        console.error("Could not load campus directory.");
+      } catch (_err) {
       } finally {
         setUsersLoading(false);
       }
@@ -63,7 +55,6 @@ export default function Inbox() {
     if (token) fetchUsers();
   }, [token, selectUserParam]);
 
-  // Fetch message history when selected contact changes
   useEffect(() => {
     if (!selectedUser) {
       setMessages([]);
@@ -81,8 +72,7 @@ export default function Inbox() {
         if (!response.ok) throw new Error("Failed to fetch conversations");
         const data = await response.json();
         setMessages(data.messages || []);
-      } catch (err) {
-        console.error(err);
+      } catch (_err) {
       } finally {
         setMessagesLoading(false);
       }
@@ -91,19 +81,16 @@ export default function Inbox() {
     fetchMessages();
   }, [selectedUser, token]);
 
-  // Listen to Socket.IO chat:message events in real-time
   useEffect(() => {
     if (!socket || !selectedUser) return;
 
     const handleNewMessage = (msg) => {
-      // Check if message belongs to the current conversation
       const isFromCurrentConversation =
         (msg.sender._id === selectedUser._id && msg.receiver._id === user.id) ||
         (msg.sender._id === user.id && msg.receiver._id === selectedUser._id);
 
       if (isFromCurrentConversation) {
         setMessages((prev) => {
-          // Avoid appending duplicate messages
           if (prev.some((m) => m._id === msg._id)) return prev;
           return [...prev, msg];
         });
@@ -124,14 +111,12 @@ export default function Inbox() {
     const textToSend = textInput.trim();
     setTextInput("");
 
-    // If socket is connected, transmit via WebSocket channel
     if (socket && socket.connected) {
       socket.emit("chat:send", {
         receiverId: selectedUser._id,
         text: textToSend
       });
     } else {
-      // Fallback to HTTP REST endpoint if socket is not ready
       fetch(`${API_BASE}/api/chats/${selectedUser._id}`, {
         method: "POST",
         headers: {
@@ -146,11 +131,10 @@ export default function Inbox() {
             setMessages((prev) => [...prev, data.message]);
           }
         })
-        .catch((err) => console.error("REST chat fallback failed", err));
+        .catch(() => {});
     }
   };
 
-  // Find the most recently referenced product in the conversation for visual pinning context
   const getContextProduct = () => {
     for (let i = messages.length - 1; i >= 0; i--) {
       if (messages[i].product) {
@@ -178,7 +162,6 @@ export default function Inbox() {
         border: "1px solid var(--border-glass)"
       }}>
         
-        {/* Left Side Pane: Campus Directory & active chats */}
         <aside style={{
           borderRight: "1px solid var(--border-glass)",
           display: "flex",
@@ -203,7 +186,7 @@ export default function Inbox() {
           }}>
             {usersLoading ? (
               <div style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
-                <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Searching campus...</span>
+                <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Loading...</span>
               </div>
             ) : chatUsers.length === 0 ? (
               <div style={{ textAlign: "center", padding: "2rem", color: "var(--text-muted)", fontSize: "0.85rem" }}>
@@ -266,7 +249,6 @@ export default function Inbox() {
           </div>
         </aside>
 
-        {/* Right Side Pane: Chat Room */}
         <main style={{
           display: "flex",
           flexDirection: "column",
@@ -275,7 +257,6 @@ export default function Inbox() {
         }}>
           {selectedUser ? (
             <>
-              {/* Header: Chat user details */}
               <header style={{
                 padding: "1rem 1.5rem",
                 borderBottom: "1px solid var(--border-glass)",
@@ -325,7 +306,6 @@ export default function Inbox() {
                 </div>
               </header>
 
-              {/* Sticky context product listing banner */}
               {contextProduct && (
                 <div style={{
                   background: "rgba(255, 179, 0, 0.06)",
@@ -370,7 +350,6 @@ export default function Inbox() {
                 </div>
               )}
 
-              {/* Chat Feed Area */}
               <div style={{
                 flexGrow: 1,
                 overflowY: "auto",
@@ -381,7 +360,7 @@ export default function Inbox() {
               }}>
                 {messagesLoading && messages.length === 0 ? (
                   <div style={{ display: "flex", justifyContent: "center", margin: "auto" }}>
-                    <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Reading logs...</span>
+                    <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Loading...</span>
                   </div>
                 ) : messages.length === 0 ? (
                   <div style={{
@@ -418,7 +397,6 @@ export default function Inbox() {
                           flexDirection: "column",
                           gap: "0.25rem"
                         }}>
-                          {/* Message body */}
                           <div style={{
                             padding: "0.75rem 1rem",
                             borderRadius: "var(--radius-md)",
@@ -434,7 +412,6 @@ export default function Inbox() {
                             {m.text}
                           </div>
 
-                          {/* Time detail */}
                           <span style={{
                             fontSize: "0.7rem",
                             color: "var(--text-muted)",
@@ -451,7 +428,6 @@ export default function Inbox() {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Chat Input form */}
               <form onSubmit={handleSendMessage} style={{
                 padding: "1rem 1.5rem",
                 borderTop: "1px solid var(--border-glass)",

@@ -48,8 +48,7 @@ const initiateSignup = async (req, res) => {
 
     await sendOtpEmail(normalizedEmail, otp);
     return res.json({ message: "OTP sent to your SRM email" });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     if (error instanceof EmailDeliveryError) {
       return res.status(502).json({ error: error.message });
     }
@@ -102,8 +101,7 @@ const verifySignup = async (req, res) => {
         profilePhoto: user.profilePhoto || ""
       }
     });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to verify signup" });
   }
 };
@@ -146,8 +144,7 @@ const signin = async (req, res) => {
         profilePhoto: user.profilePhoto || ""
       }
     });
-  } catch (error) {
-    console.error(error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to sign in" });
   }
 };
@@ -200,8 +197,7 @@ const updateProfile = async (req, res) => {
         profilePhoto: updatedUser.profilePhoto || ""
       }
     });
-  } catch (error) {
-    console.error("Error updating profile:", error);
+  } catch (_error) {
     return res.status(500).json({ error: "Failed to update profile" });
   }
 };

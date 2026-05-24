@@ -18,7 +18,6 @@ const HOSTELS = [
   "began"
 ];
 
-// Premium Client-Side Image Compression Helper
 const compressImage = (base64Str, maxWidth = 800, maxHeight = 800, quality = 0.7) => {
   return new Promise((resolve) => {
     const img = new Image();
@@ -65,7 +64,6 @@ export default function ListProduct() {
   const [price, setPrice] = useState("");
   const [hostel, setHostel] = useState(user?.hostel || "paari");
   
-  // Image handling
   const [imagePreview, setImagePreview] = useState("");
 
   const [error, setError] = useState("");
@@ -99,7 +97,6 @@ export default function ListProduct() {
     setLoading(true);
 
     try {
-      // Compress the image dynamically before sending
       const compressedImage = await compressImage(imagePreview);
 
       const response = await fetch(`${API_BASE}/api/products`, {
@@ -121,7 +118,6 @@ export default function ListProduct() {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Failed to create product listing");
 
-      // Redirect to home dashboard
       navigate("/");
     } catch (err) {
       setError(err.message || "Failed to submit listing. Try again later.");
@@ -185,7 +181,6 @@ export default function ListProduct() {
             gap: "2.5rem"
           }}>
             
-            {/* Left: Image Upload Drag Box */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <span className="form-label">Product Image</span>
               <label style={{
@@ -249,7 +244,6 @@ export default function ListProduct() {
               </span>
             </div>
 
-            {/* Right: Core Fields */}
             <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
               <div className="form-group" style={{ marginBottom: 0 }}>
                 <label className="form-label" htmlFor="title">

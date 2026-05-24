@@ -27,7 +27,6 @@ export default function ManageProducts() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Editing state
   const [editingProduct, setEditingProduct] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [editDescription, setEditDescription] = useState("");
@@ -49,8 +48,7 @@ export default function ManageProducts() {
       if (!response.ok) throw new Error("Failed to retrieve your listings");
       const data = await response.json();
       setProducts(data.products || []);
-    } catch (err) {
-      console.error(err);
+    } catch (_err) {
       setError("Unable to retrieve your products. Check server status.");
     } finally {
       setLoading(false);
@@ -149,7 +147,6 @@ export default function ManageProducts() {
 
   return (
     <div className="page-container manage-page animate-fade-in" style={{ maxWidth: "1000px", margin: "2rem auto", padding: "0 1rem" }}>
-      {/* Top Navigation */}
       <div className="page-actions" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <button 
           onClick={() => navigate(-1)}
@@ -237,10 +234,9 @@ export default function ManageProducts() {
           </div>
         )}
 
-        {/* Loading Spinner */}
         {loading ? (
           <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--text-secondary)" }}>
-            <p style={{ fontSize: "1.1rem" }}>Connecting with SRM database servers...</p>
+            <p style={{ fontSize: "1.1rem" }}>Loading...</p>
           </div>
         ) : products.length === 0 ? (
           <div style={{
@@ -261,7 +257,6 @@ export default function ManageProducts() {
             </Link>
           </div>
         ) : (
-          /* Products List */
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {products.map((product) => (
               <div key={product._id} className="glass-card manage-product-card" style={{
@@ -276,10 +271,8 @@ export default function ManageProducts() {
                 transition: "all 0.3s ease"
               }}>
                 
-                {/* Mode A: Viewing Mode */}
                 {editingProduct !== product._id && (
                   <>
-                    {/* Thumbnail */}
                     <div className="edit-product-grid" style={{
                       width: "100px",
                       height: "100px",
@@ -294,7 +287,6 @@ export default function ManageProducts() {
                       />
                     </div>
 
-                    {/* Middle: Core Meta details */}
                     <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         <span className="badge badge-blue" style={{ fontSize: "0.65rem", padding: "0.15rem 0.5rem" }}>
@@ -314,7 +306,6 @@ export default function ManageProducts() {
                       </div>
                       <h4 style={{ fontSize: "1.15rem", fontWeight: 700, color: "#ffffff" }}>{product.title}</h4>
                       
-                      {/* Price, Stock coordinates */}
                       <div style={{ display: "flex", gap: "1.5rem", marginTop: "0.25rem" }}>
                         <div style={{ display: "flex", flexDirection: "column" }}>
                           <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 600 }}>PRICE</span>
@@ -329,7 +320,6 @@ export default function ManageProducts() {
                       </div>
                     </div>
 
-                    {/* Right column: Action Controls */}
                     <div style={{ display: "flex", gap: "0.5rem" }}>
                       <button 
                         onClick={() => handleEditClick(product)}
@@ -361,7 +351,6 @@ export default function ManageProducts() {
                   </>
                 )}
 
-                {/* Mode B: Editing Mode Form */}
                 {editingProduct === product._id && (
                   <form onSubmit={handleUpdate} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid var(--border-glass)", paddingBottom: "0.75rem" }}>
@@ -458,7 +447,6 @@ export default function ManageProducts() {
                       />
                     </div>
 
-                    {/* Submit Actions */}
                     <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.75rem", marginTop: "0.5rem" }}>
                       <button 
                         type="button" 

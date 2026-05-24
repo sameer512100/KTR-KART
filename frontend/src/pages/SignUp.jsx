@@ -30,25 +30,22 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Fetch allowed hostels list from backend dynamically
   useEffect(() => {
     fetch(`${API_BASE}/api/meta/hostels`)
       .then((res) => res.json())
       .then((data) => {
         if (data && data.hostels) {
           setHostelsList(data.hostels);
-          // Set initial selection
           if (data.hostels.length > 0) setHostel(data.hostels[0]);
         }
       })
-      .catch((err) => console.log("Failed to fetch hostels, using fallback list.", err));
+      .catch(() => {});
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     
-    // Strict email check
     if (!email.toLowerCase().trim().endsWith("@srmist.edu.in")) {
       setError("Only official SRM student emails (@srmist.edu.in) are allowed.");
       return;
@@ -58,7 +55,6 @@ export default function SignUp() {
 
     try {
       await initiateSignup({ name, email, password, hostel, roomNumber });
-      // Redirect to verification view
       navigate(`/verify-otp?email=${encodeURIComponent(email.toLowerCase().trim())}`);
     } catch (err) {
       setError(err.message || "Failed to initiate signup. Please try again.");

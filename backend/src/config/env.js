@@ -5,17 +5,14 @@ const MONGODB_URI = process.env.MONGODB_URI;
 const RAW_ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN;
 
 if (!JWT_SECRET || JWT_SECRET === "change_this_secret_in_env") {
-  console.error("CRITICAL ERROR: JWT_SECRET environment variable is missing or insecure! Server startup aborted.");
   process.exit(1);
 }
 
 if (!MONGODB_URI) {
-  console.error("CRITICAL ERROR: MONGODB_URI environment variable is missing! Server startup aborted.");
   process.exit(1);
 }
 
 if (!RAW_ALLOWED_ORIGIN) {
-  console.error("CRITICAL ERROR: ALLOWED_ORIGIN environment variable is missing! Server startup aborted.");
   process.exit(1);
 }
 

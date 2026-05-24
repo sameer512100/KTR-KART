@@ -32,7 +32,6 @@ export default function Profile() {
   
   const fileInputRef = useRef(null);
 
-  // Fetch allowed hostels from backend dynamically
   useEffect(() => {
     fetch(`${API_BASE}/api/meta/hostels`)
       .then((res) => res.json())
@@ -41,10 +40,9 @@ export default function Profile() {
           setHostelsList(data.hostels);
         }
       })
-      .catch((err) => console.log("Failed to fetch hostels, using fallback list.", err));
+      .catch(() => {});
   }, []);
 
-  // Update form if user data loads after initial render
   useEffect(() => {
     if (user) {
       setName(user.name);
@@ -67,7 +65,6 @@ export default function Profile() {
       return;
     }
 
-    // Limit to 2MB to keep Base64 strings reasonable in MongoDB
     if (file.size > 2 * 1024 * 1024) {
       setError("Image size should be less than 2MB.");
       return;
@@ -95,7 +92,6 @@ export default function Profile() {
         profilePhoto
       });
       setSuccess("Profile updated successfully!");
-      // Clear success banner after 4 seconds
       setTimeout(() => setSuccess(""), 4000);
     } catch (err) {
       setError(err.message || "Failed to update profile. Please try again.");
@@ -118,7 +114,6 @@ export default function Profile() {
       margin: "2rem auto",
       padding: "0 1rem"
     }}>
-      {/* Back button */}
       <button 
         onClick={() => navigate(-1)}
         className="btn-secondary"
@@ -149,7 +144,6 @@ export default function Profile() {
           </p>
         </div>
 
-        {/* Profile photo section */}
         <div style={{
           display: "flex",
           flexDirection: "column",
@@ -190,7 +184,6 @@ export default function Profile() {
               <User size={50} style={{ color: "var(--text-muted)" }} />
             )}
             
-            {/* Camera Overlay */}
             <div style={{
               position: "absolute",
               bottom: 0,

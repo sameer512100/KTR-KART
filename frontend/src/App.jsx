@@ -3,7 +3,6 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { Navbar } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 
-// Pages
 import Marketplace from "./pages/Marketplace";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -16,7 +15,6 @@ import ManageProducts from "./pages/ManageProducts";
 
 import "./App.css";
 
-// Helper Component for Protected Paths
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
 
@@ -29,7 +27,7 @@ const ProtectedRoute = ({ children }) => {
         minHeight: "50vh",
         color: "var(--text-secondary)"
       }}>
-        <p style={{ fontSize: "1.1rem" }}>Connecting with SRM database servers...</p>
+        <p style={{ fontSize: "1.1rem" }}>Loading...</p>
       </div>
     );
   }
@@ -45,10 +43,8 @@ function AppContent() {
   return (
     <Router>
       <div className="app-shell">
-        {/* Navigation Bar */}
         <Navbar />
 
-        {/* Central main workspace container */}
         <main className="app-main">
           <Routes>
             <Route path="/" element={<Marketplace />} />
@@ -57,7 +53,6 @@ function AppContent() {
             <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/product/:id" element={<ProductDetails />} />
             
-            {/* Protected Routes */}
             <Route
               path="/list-product"
               element={
@@ -91,12 +86,10 @@ function AppContent() {
               }
             />
 
-            {/* Catch-all Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
 
-        {/* Global Footer */}
         <Footer />
       </div>
     </Router>

@@ -9,7 +9,6 @@ const { registerChatSocket } = require("./sockets/chat.socket");
 const start = async () => {
   try {
     await connectDb();
-    console.log("MongoDB connected");
 
     const server = http.createServer(app);
     const io = new Server(server, {
@@ -22,11 +21,8 @@ const start = async () => {
     setIo(io);
     registerChatSocket(io);
 
-    server.listen(env.PORT, () => {
-      console.log(`Server listening on port ${env.PORT}`);
-    });
+    server.listen(env.PORT);
   } catch (error) {
-    console.error("Failed to start server", error);
     process.exit(1);
   }
 };

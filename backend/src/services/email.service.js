@@ -62,7 +62,6 @@ const sendOtpEmail = async (email, otp) => {
   }
 
   if (!transporter) {
-    console.log(`OTP for ${email}: ${otp}`);
     return;
   }
 

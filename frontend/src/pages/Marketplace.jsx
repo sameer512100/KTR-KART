@@ -40,8 +40,7 @@ export default function Marketplace() {
       if (!response.ok) throw new Error("Failed to fetch products");
       const data = await response.json();
       setProducts(data.products || []);
-    } catch (err) {
-      console.error(err);
+    } catch (_err) {
       setError("Unable to retrieve listings. Check if database is active.");
     } finally {
       setLoading(false);
@@ -52,7 +51,6 @@ export default function Marketplace() {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Filter listings locally by Category and Search Keyword
   const filteredProducts = products.filter((p) => {
     const matchesCategory =
       selectedCategory === "All" ||
@@ -88,7 +86,6 @@ export default function Marketplace() {
   return (
     <div className="page-container marketplace-page animate-fade-in">
       
-      {/* Premium Hero Section */}
       <div className="glass-panel marketplace-hero" style={{
         padding: "3rem 2rem",
         textAlign: "center",
@@ -108,7 +105,6 @@ export default function Marketplace() {
           Buy, sell, and rent essentials directly inside your hostels. No shipping, no fees - just verify your email, list items, meet up, and trade!
         </p>
 
-        {/* Search Input bar */}
         <div style={{
           position: "relative",
           maxWidth: "600px",
@@ -140,10 +136,8 @@ export default function Marketplace() {
         </div>
       </div>
 
-      {/* Grid Filter Layout */}
       <div className="marketplace-layout">
         
-        {/* Left Side: Hostel Filters */}
         <aside className="glass-panel hostel-sidebar-wrapper" style={{
           padding: "1.5rem",
           borderRadius: "var(--radius-md)",
@@ -195,10 +189,8 @@ export default function Marketplace() {
           </div>
         </aside>
 
-        {/* Right Side: Category Toggles + Product Feed */}
         <main style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
           
-          {/* Category Tabs & CTA */}
           <div className="marketplace-toolbar" style={{
             display: "flex",
             alignItems: "center",
@@ -208,7 +200,6 @@ export default function Marketplace() {
             paddingBottom: "0.5rem",
             borderBottom: "1px solid var(--border-glass)"
           }}>
-            {/* Category Tabs */}
             <div className="category-tabs" style={{ display: "flex", gap: "0.5rem", overflowX: "auto", paddingBottom: "2px" }}>
               {CATEGORIES.map((cat) => (
                 <button
@@ -232,7 +223,6 @@ export default function Marketplace() {
               ))}
             </div>
 
-            {/* List New Product Button */}
             {user && (
               <Link to="/list-product" className="btn-primary" style={{
                 textDecoration: "none",
@@ -245,10 +235,9 @@ export default function Marketplace() {
             )}
           </div>
 
-          {/* Products Grid Feed */}
           {loading ? (
             <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--text-secondary)" }}>
-              <p style={{ fontSize: "1.1rem" }}>Connecting with SRM database servers...</p>
+              <p style={{ fontSize: "1.1rem" }}>Loading...</p>
             </div>
           ) : error ? (
             <div className="glass-panel" style={{
@@ -298,11 +287,10 @@ export default function Marketplace() {
                   height: "100%"
                 }}>
                   
-                  {/* Image wrapper */}
                   <div className="product-media" style={{
                     position: "relative",
                     width: "100%",
-                    paddingTop: "75%", /* 4:3 Aspect Ratio */
+                    paddingTop: "75%",
                     background: "rgba(0,0,0,0.2)"
                   }}>
                     <img
@@ -334,7 +322,6 @@ export default function Marketplace() {
                     </div>
                   </div>
 
-                  {/* Body Content */}
                   <div style={{
                     padding: "1.25rem",
                     display: "flex",
@@ -370,7 +357,6 @@ export default function Marketplace() {
                       minHeight: "2.8rem"
                     }}>{product.title}</h4>
 
-                    {/* Hostel Location detail */}
                     <div style={{
                       display: "flex",
                       alignItems: "center",
@@ -386,7 +372,6 @@ export default function Marketplace() {
                     </div>
                   </div>
 
-                  {/* Actions */}
                   <div style={{
                     borderTop: "1px solid var(--border-glass)",
                     padding: "0.75rem 1.25rem",

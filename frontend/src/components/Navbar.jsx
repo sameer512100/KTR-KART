@@ -16,17 +16,14 @@ export const Navbar = () => {
 
   return (
     <nav className="glass-panel navbar-container site-navbar" style={{
-      position: "fixed",
-      top: "1rem",
-      zIndex: 100,
-      margin: "1rem auto",
+      position: "relative",
+      margin: "0 auto 1rem",
       maxWidth: "1200px",
       width: "calc(100% - 2rem)",
       padding: "1rem 2rem",
       borderRadius: "var(--radius-md)",
       border: "1px solid var(--border-glass)"
     }}>
-      {/* Brand */}
       <Link to="/" style={{
         textDecoration: "none",
         display: "flex",
@@ -56,7 +53,6 @@ export const Navbar = () => {
         </span>
       </Link>
 
-      {/* Nav Links */}
       <div className="nav-links">
         <Link to="/" style={{
           textDecoration: "none",
@@ -132,7 +128,6 @@ export const Navbar = () => {
               Manage
             </Link>
 
-            {/* Profile & Signout */}
             <div className="nav-divider" style={{
               height: "24px",
               width: "1px",
