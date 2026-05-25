@@ -6,6 +6,8 @@ const createProduct = async (req, res) => {
   try {
     const { title, description, category, price, hostel, image, quantity } = req.body;
     const normalizedHostel = normalizeHostel(hostel || req.user.hostel);
+    const uploadedImagePath = req.file ? `/uploads/${req.file.filename}` : "";
+    const imageUrl = uploadedImagePath || image;
 
     if (!title || !category || price === undefined || price === null || price === "") {
       return res.status(400).json({ error: "title, category, and price are required" });
@@ -15,7 +17,7 @@ const createProduct = async (req, res) => {
       return res.status(400).json({ error: "Invalid hostel" });
     }
 
-    if (!image) {
+    if (!imageUrl) {
       return res.status(400).json({ error: "Product image is required" });
     }
 
@@ -30,7 +32,7 @@ const createProduct = async (req, res) => {
       category,
       price: Number(price),
       quantity: Number(quantity || 1),
-      imageUrl: image,
+      imageUrl,
       hostel: normalizedHostel
     });
 

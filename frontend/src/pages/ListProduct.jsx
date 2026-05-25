@@ -18,42 +18,6 @@ const HOSTELS = [
   "began"
 ];
 
-const compressImage = (base64Str, maxWidth = 800, maxHeight = 800, quality = 0.7) => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.src = base64Str;
-    img.onload = () => {
-      let width = img.width;
-      let height = img.height;
-
-      if (width > height) {
-        if (width > maxWidth) {
-          height = Math.round((height * maxWidth) / width);
-          width = maxWidth;
-        }
-      } else {
-        if (height > maxHeight) {
-          width = Math.round((width * maxHeight) / height);
-          height = maxHeight;
-        }
-      }
-
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, width, height);
-
-      const compressedBase64 = canvas.toDataURL("image/jpeg", quality);
-      resolve(compressedBase64);
-    };
-    img.onerror = () => {
-      resolve(base64Str);
-    };
-  });
-};
-
 export default function ListProduct() {
   const { token, user } = useAuth();
   const navigate = useNavigate();
@@ -65,6 +29,7 @@ export default function ListProduct() {
   const [hostel, setHostel] = useState(user?.hostel || "paari");
   
   const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState(null);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -76,10 +41,16 @@ export default function ListProduct() {
         setError("Only image files are permitted.");
         return;
       }
+
+      if (file.size > 5 * 1024 * 1024) {
+        setError("Image size should be less than 5MB.");
+        return;
+      }
       
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
+        setImageFile(file);
       };
       reader.readAsDataURL(file);
     }
@@ -97,22 +68,20 @@ export default function ListProduct() {
     setLoading(true);
 
     try {
-      const compressedImage = await compressImage(imagePreview);
+      const formData = new FormData();
+      formData.append("title", title.trim());
+      formData.append("description", description.trim());
+      formData.append("category", category);
+      formData.append("price", String(Number(price)));
+      formData.append("hostel", hostel);
+      formData.append("image", imageFile);
 
       const response = await fetch(`${API_BASE}/api/products`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim(),
-          category,
-          price: Number(price),
-          hostel,
-          image: compressedImage
-        })
+        body: formData
       });
 
       const data = await response.json();
@@ -204,8 +173,21 @@ export default function ListProduct() {
                 e.preventDefault();
                 const file = e.dataTransfer.files[0];
                 if (file) {
+                    if (!file.type.startsWith("image/")) {
+                      setError("Only image files are permitted.");
+                      return;
+                    }
+
+                    if (file.size > 5 * 1024 * 1024) {
+                      setError("Image size should be less than 5MB.");
+                      return;
+                    }
+
                   const reader = new FileReader();
-                  reader.onloadend = () => setImagePreview(reader.result);
+                    reader.onloadend = () => {
+                      setImagePreview(reader.result);
+                      setImageFile(file);
+                    };
                   reader.readAsDataURL(file);
                 }
               }}
