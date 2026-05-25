@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { ShoppingCart, LogOut, MessageSquare, PlusCircle, User, Home, Layers } from "lucide-react";
 
 export const Navbar = () => {
-  const { user, signout } = useAuth();
+  const { user, signout, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -13,6 +13,50 @@ export const Navbar = () => {
   };
 
   const isActive = (path) => location.pathname === path;
+
+  if (loading) {
+    return (
+      <nav className="glass-panel navbar-container site-navbar" style={{
+        position: "relative",
+        margin: "0 auto 1rem",
+        maxWidth: "1200px",
+        width: "calc(100% - 2rem)",
+        padding: "1rem 2rem",
+        borderRadius: "var(--radius-md)",
+        border: "1px solid var(--border-glass)"
+      }}>
+        <Link to="/" style={{
+          textDecoration: "none",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem"
+        }}>
+          <div style={{
+            background: "linear-gradient(135deg, var(--accent), #ff9900)",
+            color: "#090d16",
+            padding: "0.4rem",
+            borderRadius: "50%",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 0 10px rgba(255,179,0,0.3)"
+          }}>
+            <ShoppingCart size={20} />
+          </div>
+          <span className="brand-wordmark" style={{
+            fontFamily: "var(--font-title)",
+            fontWeight: 800,
+            fontSize: "1.4rem",
+            letterSpacing: "-0.5px"
+          }}>
+            <span style={{ color: "#ffffff" }}>KTR</span>
+            <span style={{ color: "var(--accent)" }}>-KART</span>
+          </span>
+        </Link>
+
+      </nav>
+    );
+  }
 
   return (
     <nav className="glass-panel navbar-container site-navbar" style={{
