@@ -6,6 +6,28 @@ const { createOtp, isSrmEmail, normalizeHostel, sha256 } = require("../utils/com
 const { sendOtpEmail, EmailDeliveryError } = require("../services/email.service");
 const { generateToken } = require("../services/auth.service");
 
+const resolveProfilePhotoUrl = (req, value) => {
+  if (!value) {
+    return "";
+  }
+
+  if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("data:")) {
+    return value;
+  }
+
+  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  return new URL(value.startsWith("/") ? value : `/${value}`, baseUrl).toString();
+};
+
+const serializeUser = (req, user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  hostel: user.hostel,
+  roomNumber: user.roomNumber,
+  profilePhoto: resolveProfilePhotoUrl(req, user.profilePhoto || "")
+});
+
 const initiateSignup = async (req, res) => {
   try {
     const { name, email, password, hostel, roomNumber } = req.body;
@@ -92,14 +114,7 @@ const verifySignup = async (req, res) => {
     return res.status(201).json({
       message: "Signup complete",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        hostel: user.hostel,
-        roomNumber: user.roomNumber,
-        profilePhoto: user.profilePhoto || ""
-      }
+      user: serializeUser(req, user)
     });
   } catch (_error) {
     return res.status(500).json({ error: "Failed to verify signup" });
@@ -135,14 +150,7 @@ const signin = async (req, res) => {
     const token = generateToken(user);
     return res.json({
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        hostel: user.hostel,
-        roomNumber: user.roomNumber,
-        profilePhoto: user.profilePhoto || ""
-      }
+      user: serializeUser(req, user)
     });
   } catch (_error) {
     return res.status(500).json({ error: "Failed to sign in" });
@@ -151,14 +159,7 @@ const signin = async (req, res) => {
 
 const me = (req, res) => {
   res.json({
-    user: {
-      id: req.user._id,
-      name: req.user.name,
-      email: req.user.email,
-      hostel: req.user.hostel,
-      roomNumber: req.user.roomNumber,
-      profilePhoto: req.user.profilePhoto || ""
-    }
+    user: serializeUser(req, req.user)
   });
 };
 
@@ -191,14 +192,7 @@ const updateProfile = async (req, res) => {
 
     return res.json({
       message: "Profile updated successfully",
-      user: {
-        id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        hostel: updatedUser.hostel,
-        roomNumber: updatedUser.roomNumber,
-        profilePhoto: updatedUser.profilePhoto || ""
-      }
+      user: serializeUser(req, updatedUser)
     });
   } catch (_error) {
     return res.status(500).json({ error: "Failed to update profile" });
