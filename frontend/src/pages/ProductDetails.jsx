@@ -21,7 +21,7 @@ export default function ProductDetails() {
   };
 
   const currentUserId = normalizeId(user?.id || user?._id);
-  const sellerId = normalizeId(product?.sellerId) || normalizeId(product?.seller?._id) || normalizeId(product?.seller);
+  const sellerId = normalizeId(product?.seller?._id) || normalizeId(product?.sellerId) || normalizeId(product?.seller);
   const sellerName = product?.seller?.name || product?.sellerName || "Student";
   const sellerHostel = product?.seller?.hostel || product?.sellerHostel || product?.hostel || "";
   const sellerRoomNumber = product?.seller?.roomNumber || product?.sellerRoomNumber || "N/A";

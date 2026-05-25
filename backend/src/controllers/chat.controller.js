@@ -3,6 +3,14 @@ const Message = require("../models/Message");
 const { createAndPopulateMessage } = require("../services/chat.service");
 const { getIo } = require("../sockets/io");
 
+const isValidObjectId = (value) => {
+  if (!value || typeof value !== "string") {
+    return false;
+  }
+
+  return /^[a-fA-F0-9]{24}$/.test(value);
+};
+
 const getChatUsers = async (req, res) => {
   try {
     const users = await User.find({ _id: { $ne: req.user._id } }).select(
@@ -18,7 +26,7 @@ const getMessagesWithUser = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    if (!userId) {
+    if (!isValidObjectId(userId)) {
       return res.status(400).json({ error: "userId is required" });
     }
 
@@ -44,7 +52,7 @@ const sendMessage = async (req, res) => {
     const { userId } = req.params;
     const { text, productId } = req.body;
 
-    if (!userId) {
+    if (!isValidObjectId(userId)) {
       return res.status(400).json({ error: "userId is required" });
     }
 

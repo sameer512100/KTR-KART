@@ -24,7 +24,19 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.virtual("sellerId").get(function sellerId() {
-  return this.seller ? this.seller.toString() : "";
+  if (!this.seller) {
+    return "";
+  }
+
+  if (typeof this.seller === "string") {
+    return this.seller;
+  }
+
+  if (this.seller._id) {
+    return this.seller._id.toString();
+  }
+
+  return this.seller.toString();
 });
 
 module.exports = mongoose.model("Product", productSchema);
