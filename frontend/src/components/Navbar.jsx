@@ -2,6 +2,19 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ShoppingCart, LogOut, MessageSquare, PlusCircle, User, Home, Layers } from "lucide-react";
 
+const resolveProfilePhotoUrl = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("data:")) {
+    return value;
+  }
+
+  const apiBase = import.meta.env.VITE_API_BASE?.replace(/\/+$/, "") || "";
+  return `${apiBase}${value.startsWith("/") ? value : `/${value}`}`;
+};
+
 export const Navbar = () => {
   const { user, signout, loading } = useAuth();
   const navigate = useNavigate();
@@ -202,7 +215,7 @@ export const Navbar = () => {
                 overflow: "hidden"
               }}>
                 {user.profilePhoto ? (
-                  <img src={user.profilePhoto} alt={user.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img src={resolveProfilePhotoUrl(user.profilePhoto)} alt={user.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 ) : (
                   <User size={14} />
                 )}

@@ -22,6 +22,18 @@ const normalizeUser = (value) => {
   };
 };
 
+const resolveProfilePhotoUrl = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  if (value.startsWith("http://") || value.startsWith("https://") || value.startsWith("data:")) {
+    return value;
+  }
+
+  return `${API_BASE}${value.startsWith("/") ? value : `/${value}`}`;
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("ktr_kart_token") || "");
@@ -152,17 +164,35 @@ export const AuthProvider = ({ children }) => {
   };
 
   const updateUserProfile = async ({ name, hostel, roomNumber, profilePhoto }) => {
+    const isFileUpload = typeof File !== "undefined" && profilePhoto instanceof File;
+    const requestBody = isFileUpload ? new FormData() : JSON.stringify({ name, hostel, roomNumber, profilePhoto });
+
+    if (isFileUpload) {
+      requestBody.append("name", name);
+      requestBody.append("hostel", hostel);
+      requestBody.append("roomNumber", roomNumber);
+      requestBody.append("profilePhoto", profilePhoto);
+    }
+
     const res = await fetch(`${API_BASE}/api/auth/profile`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      },
-      body: JSON.stringify({ name, hostel, roomNumber, profilePhoto }),
+      headers: isFileUpload
+        ? { Authorization: `Bearer ${token}` }
+        : {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+      body: requestBody,
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Failed to update profile");
-    setUser(normalizeUser(data.user));
+
+    setUser(
+      normalizeUser({
+        ...data.user,
+        profilePhoto: resolveProfilePhotoUrl(data.user?.profilePhoto || "")
+      })
+    );
     return data;
   };
 

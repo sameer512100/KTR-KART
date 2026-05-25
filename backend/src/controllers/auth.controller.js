@@ -175,13 +175,16 @@ const updateProfile = async (req, res) => {
       return res.status(400).json({ error: "Invalid hostel" });
     }
 
+    const uploadedPhotoPath = req.file ? `/uploads/${req.file.filename}` : "";
+    const nextProfilePhoto = uploadedPhotoPath || (profilePhoto !== undefined ? profilePhoto : req.user.profilePhoto || "");
+
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       {
         name,
         hostel: normalizedHostel,
         roomNumber,
-        profilePhoto: profilePhoto !== undefined ? profilePhoto : req.user.profilePhoto || ""
+        profilePhoto: nextProfilePhoto
       },
       { returnDocument: "after" }
     );

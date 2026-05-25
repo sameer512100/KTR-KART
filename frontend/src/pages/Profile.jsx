@@ -24,6 +24,7 @@ export default function Profile() {
   const [hostel, setHostel] = useState(user?.hostel || "");
   const [roomNumber, setRoomNumber] = useState(user?.roomNumber || "");
   const [profilePhoto, setProfilePhoto] = useState(user?.profilePhoto || "");
+  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
   
   const [hostelsList, setHostelsList] = useState(FALLBACK_HOSTELS);
   const [error, setError] = useState("");
@@ -49,6 +50,7 @@ export default function Profile() {
       setHostel(user.hostel);
       setRoomNumber(user.roomNumber);
       setProfilePhoto(user.profilePhoto || "");
+      setProfilePhotoFile(null);
     }
   }, [user]);
 
@@ -73,6 +75,7 @@ export default function Profile() {
     const reader = new FileReader();
     reader.onload = (event) => {
       setProfilePhoto(event.target.result);
+      setProfilePhotoFile(file);
       setError("");
     };
     reader.readAsDataURL(file);
@@ -89,7 +92,7 @@ export default function Profile() {
         name,
         hostel,
         roomNumber,
-        profilePhoto
+        profilePhoto: profilePhotoFile || undefined
       });
       setSuccess("Profile updated successfully!");
       setTimeout(() => setSuccess(""), 4000);
