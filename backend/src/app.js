@@ -11,6 +11,7 @@ const rateLimit = require("express-rate-limit");
 const app = express();
 
 app.use(helmet());
+app.set("trust proxy", 1);
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

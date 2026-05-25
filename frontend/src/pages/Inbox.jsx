@@ -19,6 +19,8 @@ export default function Inbox() {
 
   const messagesEndRef = useRef(null);
 
+  const currentUserId = user?.id || user?._id || "";
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -86,8 +88,8 @@ export default function Inbox() {
 
     const handleNewMessage = (msg) => {
       const isFromCurrentConversation =
-        (msg.sender._id === selectedUser._id && msg.receiver._id === user.id) ||
-        (msg.sender._id === user.id && msg.receiver._id === selectedUser._id);
+        (msg.sender._id === selectedUser._id && msg.receiver._id === currentUserId) ||
+        (msg.sender._id === currentUserId && msg.receiver._id === selectedUser._id);
 
       if (isFromCurrentConversation) {
         setMessages((prev) => {
@@ -102,7 +104,7 @@ export default function Inbox() {
     return () => {
       socket.off("chat:message", handleNewMessage);
     };
-  }, [socket, selectedUser, user]);
+  }, [socket, selectedUser, currentUserId]);
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -381,7 +383,7 @@ export default function Inbox() {
                   </div>
                 ) : (
                   messages.map((m) => {
-                    const isOwnMessage = m.sender._id === user.id;
+                    const isOwnMessage = m.sender._id === currentUserId;
                     return (
                       <div
                         key={m._id}

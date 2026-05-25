@@ -498,7 +498,7 @@ h1, h2, h3, h4, h5, h6 {
 .app-main {
   flex-grow: 1;
   width: 100%;
-  padding: calc(6rem + clamp(0.75rem, 2vw, 1.25rem)) clamp(0.75rem, 2vw, 1.25rem) clamp(0.75rem, 2vw, 1.25rem);
+  padding: clamp(0.75rem, 2vw, 1.25rem);
 }
 
 .page-container {
@@ -514,9 +514,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .site-navbar {
-  position: fixed !important;
-  inset: 1rem auto auto 50% !important;
-  transform: translateX(-50%);
+  position: relative !important;
+  inset: auto !important;
+  transform: none !important;
   z-index: 1000 !important;
   max-width: 1200px !important;
   width: min(1200px, calc(100% - 2rem)) !important;
@@ -634,7 +634,7 @@ h1, h2, h3, h4, h5, h6 {
 
 @media (max-width: 768px) {
   .app-main {
-    padding: 8.75rem 0.5rem 0.5rem;
+    padding: 0.75rem 0.5rem 0.5rem;
   }
 
   .page-container {
@@ -646,13 +646,11 @@ h1, h2, h3, h4, h5, h6 {
   .navbar-container {
     align-items: stretch !important;
     gap: 0.75rem !important;
-    top: 0.5rem !important;
     width: calc(100% - 1rem) !important;
     margin: 0.5rem auto 1rem auto !important;
   }
 
   .site-navbar {
-    inset: 0.5rem auto auto 50% !important;
     width: calc(100% - 1rem) !important;
     max-width: none !important;
     padding: 0.75rem !important;

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { io } from "socket.io-client";
 
 const AuthContext = createContext(null);
@@ -9,11 +9,29 @@ if (!configuredApiBase) {
 }
 export const API_BASE = configuredApiBase.replace(/\/+$/, "");
 
+const normalizeUser = (value) => {
+  if (!value) {
+    return null;
+  }
+
+  const id = value.id || value._id || "";
+  return {
+    ...value,
+    id: String(id),
+    _id: String(id)
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("ktr_kart_token") || "");
   const [socket, setSocket] = useState(null);
   const [loading, setLoading] = useState(true);
+  const tokenRef = useRef(token);
+
+  useEffect(() => {
+    tokenRef.current = token;
+  }, [token]);
 
   const signout = useCallback(() => {
     localStorage.removeItem("ktr_kart_token");
@@ -26,10 +44,15 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   useEffect(() => {
+    let isActive = true;
+    const requestToken = token;
+
     const fetchMe = async () => {
       if (!token) {
-        setUser(null);
-        setLoading(false);
+        if (isActive) {
+          setUser(null);
+          setLoading(false);
+        }
         return;
       }
 
@@ -42,26 +65,35 @@ export const AuthProvider = ({ children }) => {
 
         if (response.ok) {
           const data = await response.json();
-          setUser(data.user);
-        } else {
+          if (isActive && tokenRef.current === requestToken) {
+            setUser(normalizeUser(data.user));
+          }
+        } else if (isActive && tokenRef.current === requestToken) {
           signout();
         }
       } catch (_err) {
       } finally {
-        setLoading(false);
+        if (isActive && tokenRef.current === requestToken) {
+          setLoading(false);
+        }
       }
     };
 
     fetchMe();
+    return () => {
+      isActive = false;
+    };
   }, [token, signout]);
 
   useEffect(() => {
     if (user && token) {
       const newSocket = io(API_BASE, {
         auth: { token },
+        transports: ["websocket", "polling"]
       });
 
       newSocket.on("connect", () => {});
+      newSocket.on("connect_error", () => {});
 
       newSocket.on("disconnect", () => {});
 
@@ -100,7 +132,7 @@ export const AuthProvider = ({ children }) => {
     
     localStorage.setItem("ktr_kart_token", data.token);
     setToken(data.token);
-    setUser(data.user);
+    setUser(normalizeUser(data.user));
     return data;
   };
 
@@ -115,7 +147,7 @@ export const AuthProvider = ({ children }) => {
     
     localStorage.setItem("ktr_kart_token", data.token);
     setToken(data.token);
-    setUser(data.user);
+    setUser(normalizeUser(data.user));
     return data;
   };
 
@@ -130,7 +162,7 @@ export const AuthProvider = ({ children }) => {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || "Failed to update profile");
-    setUser(data.user);
+    setUser(normalizeUser(data.user));
     return data;
   };
 

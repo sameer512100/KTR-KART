@@ -20,10 +20,14 @@ export default function ProductDetails() {
     return String(value);
   };
 
+  const currentUserId = normalizeId(user?.id || user?._id);
   const sellerId = normalizeId(product?.sellerId) || normalizeId(product?.seller?._id) || normalizeId(product?.seller);
   const sellerName = product?.seller?.name || product?.sellerName || "Student";
   const sellerHostel = product?.seller?.hostel || product?.sellerHostel || product?.hostel || "";
   const sellerRoomNumber = product?.seller?.roomNumber || product?.sellerRoomNumber || "N/A";
+  const isOwnListing = Boolean(
+    currentUserId && sellerId && currentUserId === sellerId
+  ) || Boolean(user?.email && product?.sellerEmail && user.email.toLowerCase() === product.sellerEmail.toLowerCase());
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -55,7 +59,7 @@ export default function ProductDetails() {
       return;
     }
 
-    if (normalizeId(user?.id || user?._id) === sellerId) {
+    if (isOwnListing) {
       alert("You cannot start a chat thread on your own product listing!");
       return;
     }
@@ -238,7 +242,7 @@ export default function ProductDetails() {
               </div>
             </div>
 
-            {normalizeId(user?.id || user?._id) === sellerId ? (
+            {isOwnListing ? (
               <div style={{
                 background: "rgba(255, 179, 0, 0.05)",
                 border: "1px solid rgba(255, 179, 0, 0.15)",

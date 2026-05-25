@@ -14,7 +14,8 @@ const start = async () => {
     const io = new Server(server, {
       cors: {
         origin: env.ALLOWED_ORIGIN,
-        methods: ["GET", "POST", "PUT", "DELETE"]
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        credentials: true
       }
     });
 
