@@ -513,15 +513,15 @@ h1, h2, h3, h4, h5, h6 {
   margin: 4rem auto 2rem auto !important;
 }
 
-.site-navbar {
-  position: relative !important;
-  inset: auto !important;
-  transform: none !important;
-  z-index: 1000 !important;
-  max-width: 1200px !important;
-  width: min(1200px, calc(100% - 2rem)) !important;
-  margin: 0 !important;
-}
+  .site-navbar {
+    position: relative !important;
+    inset: auto !important;
+    transform: none !important;
+    z-index: 1000 !important;
+    max-width: 1200px !important;
+    width: min(1200px, calc(100% - 2rem)) !important;
+    margin: 0 auto 1rem !important;
+  }
 
 .brand-wordmark {
   letter-spacing: 0 !important;
