@@ -870,3 +870,17 @@ h1, h2, h3, h4, h5, h6 {
     min-width: 0;
   }
 }
+
+/* Responsive visibility utilities */
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: inline-flex !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+}

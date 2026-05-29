@@ -315,12 +315,7 @@ export default function Profile() {
             </span>
           </div>
 
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1.2fr 0.8fr",
-            gap: "1rem",
-            marginBottom: "1.5rem"
-          }}>
+          <div className="form-split-grid" style={{ marginBottom: "1.5rem" }}>
             <div className="form-group" style={{ marginBottom: 0 }}>
               <label className="form-label" htmlFor="hostel">
                 Campus Hostel

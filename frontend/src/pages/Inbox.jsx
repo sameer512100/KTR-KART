@@ -155,16 +155,9 @@ export default function Inbox() {
       padding: "1rem",
       height: "calc(100vh - 12rem)"
     }}>
-      <div className="glass-panel inbox-container" style={{
-        display: "grid",
-        gridTemplateColumns: "320px 1fr",
-        height: "100%",
-        borderRadius: "var(--radius-lg)",
-        overflow: "hidden",
-        border: "1px solid var(--border-glass)"
-      }}>
+      <div className="glass-panel inbox-container" style={{ border: "1px solid var(--border-glass)" }}>
         
-        <aside style={{
+        <aside className={selectedUser ? "inbox-sidebar-mobile-hide" : ""} style={{
           borderRight: "1px solid var(--border-glass)",
           display: "flex",
           flexDirection: "column",
@@ -251,7 +244,7 @@ export default function Inbox() {
           </div>
         </aside>
 
-        <main style={{
+        <main className={selectedUser ? "" : "desktop-only"} style={{
           display: "flex",
           flexDirection: "column",
           height: "100%",
@@ -268,6 +261,22 @@ export default function Inbox() {
                 alignItems: "center"
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                  <button
+                    onClick={() => {
+                      setSelectedUser(null);
+                      setSearchParams({});
+                    }}
+                    className="btn-secondary mobile-only"
+                    style={{
+                      padding: "0.4rem 0.75rem",
+                      fontSize: "0.85rem",
+                      borderRadius: "var(--radius-sm)",
+                      cursor: "pointer",
+                      marginRight: "0.5rem"
+                    }}
+                  >
+                    ← Back
+                  </button>
                   <div style={{
                     width: "40px",
                     height: "40px",

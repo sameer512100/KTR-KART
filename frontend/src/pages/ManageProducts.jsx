@@ -259,13 +259,9 @@ export default function ManageProducts() {
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {products.map((product) => (
-              <div key={product._id} className="glass-card manage-product-card" style={{
+              <div key={product._id} className={`glass-card ${editingProduct === product._id ? "" : "manage-product-card"}`} style={{
                 padding: "1.25rem",
                 borderRadius: "var(--radius-md)",
-                display: "grid",
-                gridTemplateColumns: editingProduct === product._id ? "1fr" : "100px 1fr auto",
-                gap: "1.5rem",
-                alignItems: "center",
                 background: editingProduct === product._id ? "rgba(26, 128, 230, 0.03)" : "var(--bg-card)",
                 borderColor: editingProduct === product._id ? "var(--primary)" : "var(--border-glass)",
                 transition: "all 0.3s ease"
@@ -364,11 +360,7 @@ export default function ManageProducts() {
                       </button>
                     </div>
 
-                    <div className="edit-meta-grid" style={{
-                      display: "grid",
-                      gridTemplateColumns: "1.5fr 1fr 1fr",
-                      gap: "1rem"
-                    }}>
+                    <div className="edit-product-grid">
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Listing Title</label>
                         <input 
@@ -403,11 +395,7 @@ export default function ManageProducts() {
                       </div>
                     </div>
 
-                    <div style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr",
-                      gap: "1rem"
-                    }}>
+                    <div className="edit-meta-grid">
                       <div className="form-group" style={{ marginBottom: 0 }}>
                         <label className="form-label">Category</label>
                         <select 

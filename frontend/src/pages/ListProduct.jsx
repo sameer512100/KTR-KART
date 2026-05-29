@@ -42,15 +42,38 @@ export default function ListProduct() {
         return;
       }
 
-      if (file.size > 5 * 1024 * 1024) {
-        setError("Image size should be less than 5MB.");
-        return;
-      }
-      
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-        setImageFile(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 800;
+          const MAX_HEIGHT = 800;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height *= MAX_WIDTH / width;
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width *= MAX_HEIGHT / height;
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+          setImagePreview(dataUrl);
+          setError("");
+        };
+        img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     }
@@ -68,20 +91,21 @@ export default function ListProduct() {
     setLoading(true);
 
     try {
-      const formData = new FormData();
-      formData.append("title", title.trim());
-      formData.append("description", description.trim());
-      formData.append("category", category);
-      formData.append("price", String(Number(price)));
-      formData.append("hostel", hostel);
-      formData.append("image", imageFile);
-
       const response = await fetch(`${API_BASE}/api/products`, {
         method: "POST",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: formData
+        body: JSON.stringify({
+          title: title.trim(),
+          description: description.trim(),
+          category,
+          price: Number(price),
+          hostel,
+          image: imagePreview,
+          quantity: 1
+        })
       });
 
       const data = await response.json();
@@ -144,11 +168,7 @@ export default function ListProduct() {
 
         <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
           
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1.2fr",
-            gap: "2.5rem"
-          }}>
+          <div className="upload-split">
             
             <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
               <span className="form-label">Product Image</span>
@@ -173,21 +193,44 @@ export default function ListProduct() {
                 e.preventDefault();
                 const file = e.dataTransfer.files[0];
                 if (file) {
-                    if (!file.type.startsWith("image/")) {
-                      setError("Only image files are permitted.");
-                      return;
-                    }
-
-                    if (file.size > 5 * 1024 * 1024) {
-                      setError("Image size should be less than 5MB.");
-                      return;
-                    }
+                  if (!file.type.startsWith("image/")) {
+                    setError("Only image files are permitted.");
+                    return;
+                  }
 
                   const reader = new FileReader();
-                    reader.onloadend = () => {
-                      setImagePreview(reader.result);
-                      setImageFile(file);
+                  reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                      const canvas = document.createElement("canvas");
+                      const MAX_WIDTH = 800;
+                      const MAX_HEIGHT = 800;
+                      let width = img.width;
+                      let height = img.height;
+
+                      if (width > height) {
+                        if (width > MAX_WIDTH) {
+                          height *= MAX_WIDTH / width;
+                          width = MAX_WIDTH;
+                        }
+                      } else {
+                        if (height > MAX_HEIGHT) {
+                          width *= MAX_HEIGHT / height;
+                          height = MAX_HEIGHT;
+                        }
+                      }
+
+                      canvas.width = width;
+                      canvas.height = height;
+                      const ctx = canvas.getContext("2d");
+                      ctx.drawImage(img, 0, 0, width, height);
+
+                      const dataUrl = canvas.toDataURL("image/jpeg", 0.7);
+                      setImagePreview(dataUrl);
+                      setError("");
                     };
+                    img.src = event.target.result;
+                  };
                   reader.readAsDataURL(file);
                 }
               }}
@@ -252,11 +295,7 @@ export default function ListProduct() {
                 </div>
               </div>
 
-              <div className="form-split-grid" style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "1rem"
-              }}>
+              <div className="form-split-grid">
                 <div className="form-group" style={{ marginBottom: 0 }}>
                   <label className="form-label" htmlFor="price">
                     Price (INR)
