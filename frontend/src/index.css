@@ -793,25 +793,27 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .inbox-page {
-    height: auto !important;
+    height: calc(100vh - 10rem) !important;
   }
 
   .inbox-container {
     grid-template-columns: 1fr !important;
-    height: auto !important;
-    min-height: 0;
-    overflow: visible !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
   }
 
   .inbox-container > aside {
     border-right: 0 !important;
     border-bottom: 1px solid var(--border-glass);
-    max-height: 260px;
-    min-height: 220px;
+    height: 100% !important;
+    max-height: none !important;
+    min-height: 0 !important;
   }
 
   .inbox-container > main {
-    min-height: 520px;
+    height: 100% !important;
+    min-height: 0 !important;
   }
 
   .inbox-container form {
