@@ -70,6 +70,14 @@ function AppContent() {
               }
             />
             <Route
+              path="/inbox"
+              element={
+                <ProtectedRoute>
+                  <Inbox />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/profile"
               element={
                 <ProtectedRoute>

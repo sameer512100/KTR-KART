@@ -18,15 +18,19 @@ export default function Inbox() {
   const [messagesLoading, setMessagesLoading] = useState(false);
 
   const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
 
   const currentUserId = user?.id || user?._id || "";
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    container.scrollTop = container.scrollHeight;
   };
 
   useEffect(() => {
-    scrollToBottom();
+    const rafId = window.requestAnimationFrame(scrollToBottom);
+    return () => window.cancelAnimationFrame(rafId);
   }, [messages]);
 
   useEffect(() => {
@@ -43,7 +47,8 @@ export default function Inbox() {
         setChatUsers(data.users || []);
         
         if (selectUserParam) {
-          const matchedUser = data.users.find((u) => u._id === selectUserParam);
+          const normalize = (id) => String(id || "").split(":")[0];
+          const matchedUser = data.users.find((u) => normalize(u._id) === normalize(selectUserParam));
           if (matchedUser) {
             setSelectedUser(matchedUser);
           }
@@ -66,7 +71,8 @@ export default function Inbox() {
     const fetchMessages = async () => {
       setMessagesLoading(true);
       try {
-        const response = await fetch(`${API_BASE}/api/chats/${selectedUser._id}`, {
+        const targetId = String(selectedUser._id).split(":")[0];
+        const response = await fetch(`${API_BASE}/api/chats/${targetId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -87,9 +93,10 @@ export default function Inbox() {
     if (!socket || !selectedUser) return;
 
     const handleNewMessage = (msg) => {
+      const selId = String(selectedUser._id).split(":")[0];
       const isFromCurrentConversation =
-        (msg.sender._id === selectedUser._id && msg.receiver._id === currentUserId) ||
-        (msg.sender._id === currentUserId && msg.receiver._id === selectedUser._id);
+        (msg.sender._id === selId && msg.receiver._id === currentUserId) ||
+        (msg.sender._id === currentUserId && msg.receiver._id === selId);
 
       if (isFromCurrentConversation) {
         setMessages((prev) => {
@@ -114,12 +121,14 @@ export default function Inbox() {
     setTextInput("");
 
     if (socket && socket.connected) {
+      const receiverId = String(selectedUser._id).split(":")[0];
       socket.emit("chat:send", {
-        receiverId: selectedUser._id,
+        receiverId,
         text: textToSend
       });
     } else {
-      fetch(`${API_BASE}/api/chats/${selectedUser._id}`, {
+      const receiverId = String(selectedUser._id).split(":")[0];
+      fetch(`${API_BASE}/api/chats/${receiverId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +162,8 @@ export default function Inbox() {
       maxWidth: "1100px",
       margin: "0 auto",
       padding: "1rem",
-      height: "calc(100vh - 12rem)"
+      height: "calc(100vh - 12rem)",
+      overflow: "hidden"
     }}>
       <div className="glass-panel inbox-container" style={{ border: "1px solid var(--border-glass)" }}>
         
@@ -161,7 +171,8 @@ export default function Inbox() {
           borderRight: "1px solid var(--border-glass)",
           display: "flex",
           flexDirection: "column",
-          background: "rgba(0, 0, 0, 0.15)"
+          background: "rgba(0, 0, 0, 0.15)",
+          minHeight: 0
         }}>
           <div style={{
             padding: "1.25rem",
@@ -193,8 +204,9 @@ export default function Inbox() {
                   <button
                     key={u._id}
                     onClick={() => {
+                      const normalizedId = String(u._id).split(":")[0];
                       setSelectedUser(u);
-                      setSearchParams({ selectUser: u._id });
+                      setSearchParams({ selectUser: normalizedId });
                     }}
                     style={{
                       border: "none",
@@ -248,7 +260,8 @@ export default function Inbox() {
           display: "flex",
           flexDirection: "column",
           height: "100%",
-          background: "rgba(9, 13, 22, 0.4)"
+          background: "rgba(9, 13, 22, 0.4)",
+          minHeight: 0
         }}>
           {selectedUser ? (
             <>
@@ -365,13 +378,16 @@ export default function Inbox() {
                 </div>
               )}
 
-              <div style={{
+              <div
+                ref={messagesContainerRef}
+                style={{
                 flexGrow: 1,
                 overflowY: "auto",
                 padding: "1.5rem",
                 display: "flex",
                 flexDirection: "column",
-                gap: "1rem"
+                gap: "1rem",
+                minHeight: 0
               }}>
                 {messagesLoading && messages.length === 0 ? (
                   <div style={{ display: "flex", justifyContent: "center", margin: "auto" }}>
