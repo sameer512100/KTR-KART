@@ -161,9 +161,7 @@ export default function Inbox() {
     <div className="page-container inbox-page animate-fade-in" style={{
       maxWidth: "1100px",
       margin: "0 auto",
-      padding: "1rem",
-      height: "calc(100vh - 12rem)",
-      overflow: "hidden"
+      padding: "1rem"
     }}>
       <div className="glass-panel inbox-container" style={{ border: "1px solid var(--border-glass)" }}>
         
