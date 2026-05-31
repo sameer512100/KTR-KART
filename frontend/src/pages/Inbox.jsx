@@ -335,11 +335,15 @@ export default function Inbox() {
                       overflow: "hidden",
                       background: "rgba(0,0,0,0.2)"
                     }}>
-                      <img
-                        src={contextProduct.imageUrl.startsWith("data:") ? contextProduct.imageUrl : `${API_BASE}${contextProduct.imageUrl}`}
-                        alt={contextProduct.title}
-                        style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                      />
+                      {contextProduct.imageUrl ? (
+                        <img
+                          src={contextProduct.imageUrl?.startsWith?.("data:") ? contextProduct.imageUrl : `${API_BASE}${contextProduct.imageUrl}`}
+                          alt={contextProduct.title || "listing"}
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        />
+                      ) : (
+                        <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: "var(--text-muted)", fontSize: "0.75rem" }}>No image</div>
+                      )}
                     </div>
                     <div>
                       <span style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>Negotiating listing:</span>
@@ -417,8 +421,8 @@ export default function Inbox() {
                             lineHeight: "1.45",
                             boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                             border: isOwnMessage ? "none" : "1px solid var(--border-glass)",
-                            borderRadiusTopRight: isOwnMessage ? 0 : "var(--radius-md)",
-                            borderRadiusTopLeft: isOwnMessage ? "var(--radius-md)" : 0
+                            borderTopRightRadius: isOwnMessage ? 0 : "var(--radius-md)",
+                            borderTopLeftRadius: isOwnMessage ? "var(--radius-md)" : 0
                           }}>
                             {m.text}
                           </div>
