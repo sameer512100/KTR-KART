@@ -16,6 +16,48 @@ const FALLBACK_HOSTELS = [
   "began"
 ];
 
+const compressProfileImage = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onerror = () => reject(new Error("Failed to read the selected image."));
+    reader.onload = (event) => {
+      const image = new Image();
+
+      image.onerror = () => reject(new Error("The selected file is not a valid image."));
+      image.onload = () => {
+        const MAX_SIZE = 512;
+        let width = image.width;
+        let height = image.height;
+
+        if (width > height && width > MAX_SIZE) {
+          height = Math.round((height * MAX_SIZE) / width);
+          width = MAX_SIZE;
+        } else if (height >= width && height > MAX_SIZE) {
+          width = Math.round((width * MAX_SIZE) / height);
+          height = MAX_SIZE;
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        const context = canvas.getContext("2d");
+        if (!context) {
+          reject(new Error("Unable to process the selected image."));
+          return;
+        }
+
+        context.drawImage(image, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+
+      image.src = event.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
+
 export default function Profile() {
   const { user, updateUserProfile } = useAuth();
   const navigate = useNavigate();
@@ -24,7 +66,6 @@ export default function Profile() {
   const [hostel, setHostel] = useState(user?.hostel || "");
   const [roomNumber, setRoomNumber] = useState(user?.roomNumber || "");
   const [profilePhoto, setProfilePhoto] = useState(user?.profilePhoto || "");
-  const [profilePhotoFile, setProfilePhotoFile] = useState(null);
   
   const [hostelsList, setHostelsList] = useState(FALLBACK_HOSTELS);
   const [error, setError] = useState("");
@@ -50,7 +91,6 @@ export default function Profile() {
       setHostel(user.hostel);
       setRoomNumber(user.roomNumber);
       setProfilePhoto(user.profilePhoto || "");
-      setProfilePhotoFile(null);
     }
   }, [user]);
 
@@ -58,7 +98,7 @@ export default function Profile() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -72,13 +112,13 @@ export default function Profile() {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      setProfilePhoto(event.target.result);
-      setProfilePhotoFile(file);
+    try {
+      const compressedImage = await compressProfileImage(file);
+      setProfilePhoto(compressedImage);
       setError("");
-    };
-    reader.readAsDataURL(file);
+    } catch (compressionError) {
+      setError(compressionError.message || "Failed to prepare the selected image.");
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -92,7 +132,7 @@ export default function Profile() {
         name,
         hostel,
         roomNumber,
-        profilePhoto: profilePhotoFile || undefined
+        profilePhoto
       });
       setSuccess("Profile updated successfully!");
       setTimeout(() => setSuccess(""), 4000);

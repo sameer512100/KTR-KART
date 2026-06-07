@@ -30,7 +30,9 @@ export const Navbar = () => {
   if (loading) {
     return (
       <nav className="glass-panel navbar-container site-navbar" style={{
-        position: "relative",
+        position: "sticky",
+        top: "1rem",
+        zIndex: 1000,
         margin: "0 auto 1rem",
         maxWidth: "1200px",
         width: "calc(100% - 2rem)",
@@ -73,7 +75,9 @@ export const Navbar = () => {
 
   return (
     <nav className="glass-panel navbar-container site-navbar" style={{
-      position: "relative",
+      position: "sticky",
+      top: "1rem",
+      zIndex: 1000,
       margin: "0 auto 1rem",
       maxWidth: "1200px",
       width: "calc(100% - 2rem)",
