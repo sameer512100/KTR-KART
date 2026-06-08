@@ -70,7 +70,7 @@ const initiateSignup = async (req, res) => {
 
     await sendOtpEmail(normalizedEmail, otp);
     return res.json({ message: "OTP sent to your SRM email" });
-  } catch (_error) {
+  } catch (error) {
     if (error instanceof EmailDeliveryError) {
       return res.status(502).json({ error: error.message });
     }

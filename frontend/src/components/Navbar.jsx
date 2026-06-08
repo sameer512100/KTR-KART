@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { ShoppingCart, LogOut, MessageSquare, PlusCircle, User, Home, Layers } from "lucide-react";
+import { ShoppingCart, LogOut, MessageSquare, PlusCircle, User, Home, Layers, Download } from "lucide-react";
 
 const resolveProfilePhotoUrl = (value) => {
   if (!value) {
@@ -19,10 +20,44 @@ export const Navbar = () => {
   const { user, signout, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null);
+  const [canInstall, setCanInstall] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event) => {
+      event.preventDefault();
+      setDeferredInstallPrompt(event);
+      setCanInstall(true);
+    };
+
+    const handleAppInstalled = () => {
+      setDeferredInstallPrompt(null);
+      setCanInstall(false);
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
+  }, []);
 
   const handleSignout = () => {
     signout();
     navigate("/");
+  };
+
+  const handleInstallApp = async () => {
+    if (!deferredInstallPrompt) {
+      return;
+    }
+
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    setDeferredInstallPrompt(null);
+    setCanInstall(false);
   };
 
   const isActive = (path) => location.pathname === path;
@@ -256,6 +291,26 @@ export const Navbar = () => {
               <LogOut size={15} />
               Sign Out
             </button>
+
+            {canInstall && (
+              <button
+                onClick={handleInstallApp}
+                className="btn-secondary"
+                style={{
+                  padding: "0.5rem 0.75rem",
+                  borderRadius: "var(--radius-sm)",
+                  fontSize: "0.9rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.35rem",
+                  color: "var(--accent)",
+                  borderColor: "rgba(255, 179, 0, 0.25)"
+                }}
+              >
+                <Download size={15} />
+                Install App
+              </button>
+            )}
           </>
         ) : (
           <>
@@ -273,6 +328,26 @@ export const Navbar = () => {
             }}>
               Sign Up
             </Link>
+
+            {canInstall && (
+              <button
+                onClick={handleInstallApp}
+                className="btn-secondary"
+                style={{
+                  padding: "0.5rem 0.75rem",
+                  borderRadius: "var(--radius-sm)",
+                  fontSize: "0.9rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.35rem",
+                  color: "var(--accent)",
+                  borderColor: "rgba(255, 179, 0, 0.25)"
+                }}
+              >
+                <Download size={15} />
+                Install App
+              </button>
+            )}
           </>
         )}
       </div>

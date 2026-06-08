@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { API_BASE, useAuth } from "../context/AuthContext";
 import { PlusCircle, ShoppingBag, DollarSign, List, Home, AlertCircle, FileImage } from "lucide-react";
 
-const CATEGORIES = ["Books", "Electronics", "Hostel Essentials", "Cycles", "Others"];
+const CATEGORIES = ["Snacks", "Electronics", "Hostel Essentials", "Cycles", "Others"];
 
 const HOSTELS = [
   "paari",
@@ -24,7 +24,7 @@ export default function ListProduct() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("Books");
+  const [category, setCategory] = useState("Snacks");
   const [price, setPrice] = useState("");
   const [hostel, setHostel] = useState(user?.hostel || "paari");
   

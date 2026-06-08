@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { API_BASE, useAuth } from "../context/AuthContext";
 import { Search, MapPin, Plus, ShoppingBag, Eye, Calendar } from "lucide-react";
 
-const CATEGORIES = ["All", "Books", "Electronics", "Hostel Essentials", "Cycles", "Others"];
+const CATEGORIES = ["All", "Snacks", "Electronics", "Hostel Essentials", "Cycles", "Others"];
 
 const HOSTELS = [
   "paari",

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">KTR-KART</title>
+  <desc id="desc">Shopping cart logo for the KTR-KART progressive web app.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a80e6"/>
+      <stop offset="100%" stop-color="#ffb300"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="#090d16"/>
+  <circle cx="256" cy="256" r="170" fill="url(#bg)" opacity="0.16"/>
+  <path d="M160 146h42l23 118h132l26-86H223" fill="none" stroke="#ffffff" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="208" cy="362" r="30" fill="#ffffff"/>
+  <circle cx="323" cy="362" r="30" fill="#ffffff"/>
+  <path d="M196 166h204" stroke="#ffb300" stroke-width="24" stroke-linecap="round"/>
+  <path d="M216 210h174" stroke="#1a80e6" stroke-width="20" stroke-linecap="round" opacity="0.9"/>
+</svg>
