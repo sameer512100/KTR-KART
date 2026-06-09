@@ -8,6 +8,12 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'service-worker.js',
+      injectManifest: {
+        globPatterns: ['**/*.{js,css,html,png,svg,webmanifest}']
+      },
       includeAssets: ['favicon.svg', 'pwa-icon.svg'],
       manifest: {
         name: 'KTR-KART',

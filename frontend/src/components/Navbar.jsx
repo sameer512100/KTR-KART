@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { ShoppingCart, LogOut, MessageSquare, PlusCircle, User, Home, Layers, Download } from "lucide-react";
+import usePushSubscription from "../hooks/usePushSubscription";
 
 const resolveProfilePhotoUrl = (value) => {
   if (!value) {
@@ -17,11 +18,12 @@ const resolveProfilePhotoUrl = (value) => {
 };
 
 export const Navbar = () => {
-  const { user, signout, loading } = useAuth();
+  const { user, signout, loading, token } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [deferredInstallPrompt, setDeferredInstallPrompt] = useState(null);
   const [canInstall, setCanInstall] = useState(false);
+  const { supported, permission, subscribe } = usePushSubscription(token);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (event) => {
@@ -309,6 +311,27 @@ export const Navbar = () => {
               >
                 <Download size={15} />
                 Install App
+              </button>
+            )}
+
+            {user && supported && permission !== "granted" && (
+              <button
+                onClick={async () => {
+                  try {
+                    const p = await Notification.requestPermission();
+                    if (p === "granted") {
+                      const vapid = import.meta.env.VITE_VAPID_PUBLIC_KEY || "";
+                      await subscribe(vapid);
+                    }
+                  } catch (e) {
+                    console.error("subscribe failed", e);
+                  }
+                }}
+                className="btn-secondary"
+                style={{ padding: "0.5rem 0.75rem", borderRadius: "var(--radius-sm)", fontSize: "0.9rem", display: "flex", alignItems: "center", gap: "0.35rem", color: "var(--accent)", borderColor: "rgba(255, 179, 0, 0.25)" }}
+              >
+                <Download size={15} />
+                Enable Notifications
               </button>
             )}
           </>

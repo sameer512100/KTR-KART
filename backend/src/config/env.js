@@ -28,5 +28,9 @@ const env = {
   ALLOWED_ORIGIN,
   UPLOADS_DIR: path.join(process.cwd(), "uploads")
 };
+// Optional Web Push config — don't fail startup if missing
+env.VAPID_PUBLIC_KEY = process.env.VAPID_PUBLIC_KEY || "";
+env.VAPID_PRIVATE_KEY = process.env.VAPID_PRIVATE_KEY || "";
+env.SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "";
 
 module.exports = env;
