@@ -44,6 +44,11 @@ app.use(cors({
 app.use(express.json());
 app.use("/uploads", express.static(env.UPLOADS_DIR));
 
+
+app.get("/",(req,res)=>{
+  res.json({message:"Welcome to KTR-KART API"});
+})
+
 app.use("/api/auth", authLimiter);
 app.use("/api", generalApiLimiter);
 app.use("/api", routes);
